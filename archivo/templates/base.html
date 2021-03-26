@@ -1,0 +1,54 @@
+{% load static %}
+{% load fullurl %}
+
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'archivo/style.css' %}">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}El Muladar{% endblock %}</title>
+	<meta property="og:title" content="El Muladar" />
+	<meta property="og:description" content="{% block description %}El Muladar es un archivo de Punk Colombiano de libre acceso.{% endblock %}" />
+    <meta property="og:image" content="{% block imagen %}{% endblock %}" />
+	<meta property="og:type" content="website"/>
+	
+</head>
+<body>
+
+
+    {% if user.is_authenticated %}
+    <div align="right"><h5>Hola,
+        <a href="{% url 'archivo:admin' %}">Admin</a> 
+        <a href="{% url 'login:logout' %}">Salir</a></h5>
+    </div>
+    {% endif %} 
+
+<div align="center"><h5>Un archivo de Punk Colombiano</h5></div>
+<a href="{% url 'archivo:index' %}"><img class="top-image" src="{% static "archivo/muladarlogo.png" %}"></a>
+
+
+<ul>
+
+    <li><a href="{% url 'archivo:index' %}">Inicio</a></li>  
+  
+    <li> Archivo  
+        <ul>
+              <li><a href="{% url 'lanzamiento:index' %}">Lanzamientos Disponibles</a></li>
+              <li><a href="{% url 'lanzamiento:index' %}?no_disponibles=true">Todos los lanzamientos</a></li>
+              <li><a href="{% url 'banda:index' %}">Bandas</a></li>
+              <li><a href="{% url 'publicacion:index' %}">Fanzines y otras publicaciones</a></li>
+              <li><a href="{% url 'archivo:buscar' %}">Buscar en el archivo</a></li>
+        </ul>
+    </li>
+    <li><a href="{% url 'archivo:blog' %}">Blog</a></li>  
+    <li><a href="{% url 'archivo:about' %}">Acerca de</a></li>
+    <li><a href="{% url 'archivo:contact' %}">Contacto</a></li>
+    
+  </ul>
+  <hr/>
+  
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% load banda_filters %}
+
+{% block title %}
+Publicaciones - El Muladar
+{% endblock %}
+
+{% block content %}
+
+<h2>Lista de Fanzines y otras publicaciones</h2>
+
+<ul>
+	{% if publicaciones %}
+		{% with '' as letra %}
+			{% for publicacion in publicaciones %}
+			{% if letra != publicacion.nombre|slice:1 %}
+				{% update_variable publicacion.nombre|slice:1 as letra %}
+				<b>{{letra}}</b>			
+			{% endif %}
+			<li>
+				<a href="{% url 'publicacion:detail' publicacion.nombrecorto %}">
+					{{ publicacion.nombre }} {{ publicacion.numero }} ({{ publicacion.fecha }})
+				</a>
+			</li>
+			{% endfor %}
+        {% endwith %}
+	{% endif %}
+</ul>
+
+</table>
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load lanzamiento_filters %}
+{% block title %}
+{{ lanzamiento.nombre }} - El Muladar
+{% endblock %}
+
+{% block content %}
+	
+<p>
+{% if lanzamiento.imagen %}
+	<a href="{{ lanzamiento.imagen.url }}"><IMG class = 'view-na' SRC="{{ lanzamiento.imagen.url | add_suffix }}" ALIGN="RIGHT"></IMG></a>
+{% else %}
+	<img class = 'view-image' src="{% static 'archivo/placeholder.gif' %}" ALIGN="RIGHT">
+{% endif %}
+</p>
+<p><H3>{{ lanzamiento.nombre }} ({{ lanzamiento.anho }})</H3></p>
+<P>{{ lanzamiento.referencia }}</P>
+
+<P><B>Banda</B>
+	<ul>
+		{% for banda in  lanzamiento.bandas.all %}
+			<li>
+				<a href="{% url 'banda:detail' banda.nombrecorto %}">{{banda.nombre}}</a>			
+			</li>		
+		{% endfor %}
+	</ul>
+</P>
+<BR CLEAR="ALL">
+
+<hr>
+
+{{ lanzamiento.tracklist | linebreaksbr  }}
+
+<hr>
+
+{{ lanzamiento.creditos | linebreaksbr  }}
+{{ lanzamiento.notas | linebreaksbr  }}
+
+<hr>
+
+{% if lanzamiento.link %}
+	<a href="{{lanzamiento.link}}">Link de descarga</a>
+{% else %}
+	¡No hay link disponible para descarga! 
+	<a href="">Para más información dar click acá</a>
+{% endif%}
+
+<br>
+
+{% if lanzamiento.link_youtube %}
+	<a href="{{lanzamiento.link_youtube}}">Link a Youtube</a>
+{% endif%}
+<br>
+
+<p class="gray">Id de referencia: {{ lanzamiento.indice_referencia }}</p>
+
+
+
+{% if user.is_authenticated %}
+	<div align="right">
+		<h5>
+			<a href="{% url 'lanzamiento:edit' lanzamiento.nombrecorto %}">Editar</a>|
+			<a href="{% url 'lanzamiento:delete' lanzamiento.nombrecorto %}">Borrar</a>
+		</h5>
+	</div>
+{% endif %}
+
+
+
+
+{% endblock %}

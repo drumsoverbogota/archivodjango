@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+El Muladar
+{% endblock %}
+
+{% block content %}
+
+<!-- begin page content -->
+<div class="center-justified">
+Buscar en el archivo
+<form action="{% url 'archivo:buscar' %}" method="GET">
+    <input type="input" name="peticion" value ="{{ peticion }}"/><br />
+    <input type="submit" value="Buscar" />
+</form>    
+
+<p><h2>¡Bienvenidos a El Muladar!</h2></p>
+
+<p>El Muladar es un archivo de Punk Colombiano. Pueden ver todos los discos disponibles para descarga acá en <a href="{% url 'lanzamiento:index' %}">Lanzamientos Disponibles</a>, las bandas acá en <a href="{% url 'banda:index' %}">Bandas</a> y los fanzines acá en <a href="{% url 'publicacion:index' %}">Publicaciones</a>.</p>
+<p>
+También empezamos a agregar los discos que aún no tenemos disponibles acá en <a href="{% url 'lanzamiento:index' %}?no_disponibles=true"> Todos los lanzamientos</a>. Ahí están los discos que sabemos que existen pero no tenemos acceso el disco en físico para digitalizarlo. </p>
+
+<hr/>
+
+<p><h2>Noticias</h2></p>
+
+{% if ultimas_entradas_list %}
+    {% for noticia in ultimas_entradas_list %}
+        <h3>{{ noticia.titulo }} ({{ noticia.fecha }})</h3>
+        {{ noticia.contenido | safe}}
+		{% if user.is_authenticated %}
+			<div align="right"><h5>
+				<a href="{% url 'entrada:edit' noticia.id %}">Editar</a>|
+				<a href="{% url 'entrada:delete' noticia.id %}">Borrar</a></h5>
+			</div>
+		{% endif %}
+    {% endfor %}
+{% endif %}
+
+</div>
+
+{% endblock %}

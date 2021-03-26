@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load banda_filters %}
+{% block title %}
+{{ banda.nombre }} - El Muladar
+{% endblock %}
+
+{% block content %}
+
+<p>
+{% if banda.imagen %}
+	<a href="{{ banda.imagen.url }}"><IMG class = 'view-na' SRC="{{ banda.imagen.url | add_suffix }}" ALIGN="RIGHT"></IMG></a>
+{% else %}
+	<img class = 'view-image' src="{% static 'archivo/placeholder.gif' %}" ALIGN="RIGHT">
+{% endif %}
+</p>
+
+<p><H3>{{ banda.nombre }} 
+
+{% if banda.otros %}
+	({{ banda.otros }})
+{% endif %}
+</H3></p>
+
+<p>
+	{% if banda.integrantes %}
+		<b>Integrantes</b>
+		<pre>
+			{{ banda.integrantes }}
+		</pre>
+	{% endif %}
+</p>
+<BR CLEAR="ALL">
+
+<hr>
+<h4>Lanzamientos</h4>
+<ul>
+
+
+{% for lanzamiento in banda.lanzamientos.all%}
+	<li>
+		<a href="{% url 'lanzamiento:detail' lanzamiento.nombrecorto %}">
+			{% if not lanzamiento.disponible %}
+				<b class="rojo">
+			{% endif %}
+			{{ lanzamiento.nombre }}
+			{{ lanzamiento.anho }}
+			{% if not lanzamiento.disponible %}
+				*</b>
+			{% endif %}
+		</a>
+	</li>
+{% endfor%}
+</ul>
+{{ banda.comentarios }}
+<hr>
+<p>
+<b>Notas</b>
+<pre>
+{{ banda.notas }}
+</pre>
+</p>
+<hr>
+{% if nodisponible %}
+	<b class="rojo">Los discos marcados con * no los tenemos disponibles para descarga, más <a href="<?php echo site_url('entrada/'.$disponible_blog);?>">información acá.</a></b>
+{% endif %}
+
+{% if user.is_authenticated %}
+	<div align="right"><h5>
+	<a href="{% url 'banda:edit' banda.nombrecorto %}">Editar</a>|
+	<a href="{% url 'banda:delete' banda.nombrecorto %}">Borrar</a>
+	</h5></div>
+{% endif %}
+
+
+
+
+{% endblock %}
