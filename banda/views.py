@@ -17,6 +17,7 @@ from django.urls import reverse
 from archivo.models import generar_nombrecorto
 from archivo.models import resize
 from archivo.models import Banda
+from archivo.models import Lanzamiento
 from archivodjango.settings import MEDIA_ROOT
 
 from .forms import BandaForm

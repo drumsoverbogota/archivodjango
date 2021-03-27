@@ -6,11 +6,20 @@ from django.views.generic import CreateView
 from django.views.generic import UpdateView
 from django.views.generic import DetailView
 from django.views.generic import DeleteView
+from django.views.generic import ListView
 from django.shortcuts import render
 from django.urls import reverse
 
 from .models import Entrada
 from .forms import CreateEntradaForm
+
+class BlogIndexView(ListView):
+    template_name = 'entrada/index.html'
+    context_object_name = 'entradas'
+
+    def get_queryset(self):
+        print(Entrada.objects.filter(tipo='blog').order_by("-fecha").count())
+        return Entrada.objects.filter(tipo='blog').order_by("-fecha")
 
 class EntradaDetailView(DetailView):
     template_name = 'entrada/detail.html'
@@ -50,8 +59,8 @@ class EntradaCreateView(LoginRequiredMixin, CreateView):
                                    'pk': nueva_entrada.id})
         return super().form_valid(form)
 
-class DeleteEntradaView(LoginRequiredMixin, DeleteView):
+class EntradaDeleteView(LoginRequiredMixin, DeleteView):
     login_url = '/login'
     template_name = 'entrada/delete.html'
     model = Entrada
-    success_url = '/'
+    success_url = '/blog'

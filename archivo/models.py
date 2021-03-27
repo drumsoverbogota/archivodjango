@@ -77,7 +77,7 @@ class Banda(models.Model):
         db_table = 'banda'
 
     def __str__(self):
-        return self.nombre
+        return str(self.id) + ' - ' +self.nombre
 
 
 class BandaLanzamiento(models.Model):
@@ -134,6 +134,9 @@ class Publicacion(models.Model):
     class Meta:
         managed = False
         db_table = 'publicacion'
+
+    def __str__(self):
+        return self.nombre
 
 
 #https://matthiasomisore.com/uncategorized/django-delete-file-when-object-is-deleted/

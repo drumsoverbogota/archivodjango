@@ -120,3 +120,23 @@ ul.bandas {
     -moz-columns: 2;
   }
   
+
+ul.column-checkbox li{
+    border: 1px transparent solid; 
+    display:inline-block;
+    width:20em;
+}
+
+p.center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 25em;
+    font-style: italic;
+    text-align: center;
+  }
+
+iframe.centered{
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+  }

@@ -19,6 +19,15 @@ class IndexView(ListView):
     def get_queryset(self):
         return Entrada.objects.filter(tipo='noticia').order_by('-fecha')
 
+class ListaView(TemplateView):
+    template_name = 'archivo/lista.html'
+    def get_context_data(self, **kwargs):
+
+        get_request = self.request.GET.get
+        context = super().get_context_data(**kwargs)
+        context["lanzamientos"] = Lanzamiento.objects.all().order_by('indice_referencia')
+        context["publicaciones"] = Publicacion.objects.all()
+        return context
 
 class AboutView(TemplateView):
     template_name = 'archivo/about.html'
