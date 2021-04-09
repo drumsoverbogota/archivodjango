@@ -149,7 +149,7 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
                         filetype = 'jpeg'
 
                     print(nombre, extension, filetype)
-                    ruta_thumbnail = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image_small' + extension
+                    ruta_thumbnail = str(id_lanzamiento) + nombrecorto + 'image_small' + extension
                     ruta = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image' + extension
 
                     im = Image.open(imagen)
@@ -211,7 +211,7 @@ class LanzamientoCreateView(LoginRequiredMixin, FormView):
             if filetype == 'jpg':
                 filetype = 'jpeg'
             
-            ruta_thumbnail = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image_small' + extension
+            ruta_thumbnail = str(id_lanzamiento) + nombrecorto + 'image_small' + extension
             ruta = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image' + extension
 
             im = Image.open(imagen)
