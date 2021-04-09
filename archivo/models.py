@@ -152,9 +152,5 @@ class Publicacion(models.Model):
 @receiver(post_delete, sender=Lanzamiento)
 @receiver(post_delete, sender=Publicacion)
 def submission_delete(sender, instance, **kwargs):
-    thumbnail_name = MEDIA_ROOT + instance.imagen.name.replace('.', '_small.')
-    try:
-        os.remove(thumbnail_name)
-    except:
-        pass 
     instance.imagen.delete(False) 
+    instance.imagen_thumbnail.delete(False)

@@ -135,9 +135,15 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
                 old_ruta = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image' + old_extension
                 old_file = Lanzamiento.objects.get(id=id_lanzamiento).imagen
                 if os.path.isfile(old_ruta):
-                    os.remove(old_ruta)
+                    try:
+                        os.remove(old_ruta)
+                    except OSError as e:
+                        print("Error borrando imagen! ", e)
                 if os.path.isfile(old_ruta_thumbnail):
-                    os.remove(old_ruta_thumbnail)
+                    try:
+                        os.remove(old_ruta_thumbnail)
+                    except OSError as e:
+                        print("Error borrando thumbnail! ", e)
             if imagen and old_file != imagen:
                 if imagen:
                     output = BytesIO()
@@ -169,7 +175,7 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
                     im.thumbnail(resize(200, im.size[0], im.size[1]))
                     im.save(output_thumbnail, filetype)
 
-                    nueva_entrada.imagen_thumbnail = InMemoryUploadedFile(
+                    nueva_entrada.imagen = InMemoryUploadedFile(
                         output_thumbnail,
                         'FileField',
                         ruta_thumbnail,
@@ -218,7 +224,7 @@ class LanzamientoCreateView(LoginRequiredMixin, FormView):
             if filetype == 'jpg':
                 filetype = 'jpeg'
             
-            ruta = str(id_lanzamiento) + nombrecorto + 'image' + extension
+            ruta = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image' + extension
             ruta_thumbnail = str(id_lanzamiento) + nombrecorto + 'image_small' + extension
 
             im = Image.open(imagen)
