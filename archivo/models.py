@@ -28,10 +28,15 @@ FORMATOS = (
     )
 )
 
-def upload_location(instance, filename):
+def upload_location(instance, filename, thumbnail=False):
 
+    print(filename)
     filebase, extension = os.path.splitext(filename)
     nombre = str(instance.id) + instance.nombrecorto + 'image'
+    if thumbnail:
+        nombre = str(instance.id) + instance.nombrecorto + 'image_small'
+    else:
+        nombre = str(instance.id) + instance.nombrecorto + 'image'    
     return '%s%s' % (nombre, extension)
 
 def resize(max_width, width, height):
@@ -67,7 +72,8 @@ class Banda(models.Model):
     otros = models.TextField(blank=True, null=True)
     integrantes = models.TextField(blank=True, null=True)
     comentarios = models.TextField(blank=True, null=True)
-    imagen = models.FileField(blank=True, null=True, upload_to=upload_location)
+    imagen = models.FileField(blank=True, null=True)
+    imagen_thumbnail = models.FileField(blank=True, null=True)
     extranjera = models.BooleanField()
     fecha_creacion = models.DateTimeField(blank=True, null=True)
     fecha_modificacion = models.DateTimeField(blank=True, null=True)
@@ -105,7 +111,8 @@ class Lanzamiento(models.Model):
     link = models.TextField(blank=True, null=True)
     link_youtube = models.TextField(blank=True, null=True)
     indice_referencia = models.TextField(blank=True, null=True)
-    imagen = models.FileField(blank=True, null=True, upload_to=upload_location)
+    imagen = models.FileField(blank=True, null=True)
+    imagen_thumbnail = models.FileField(blank=True, null=True)
     fecha_creacion = models.DateTimeField(blank=True, null=True)
     fecha_modificacion = models.DateTimeField(blank=True, null=True)
     visible = models.BooleanField()

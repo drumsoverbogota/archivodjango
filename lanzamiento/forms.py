@@ -52,6 +52,7 @@ class LanzamientoForm(ModelForm):
     class Meta:
         model = Lanzamiento
         exclude = [
+            'imagen_thumbnail',
             'nombrecorto',
             'fecha_creacion', 
             'fecha_modificacion', 

@@ -148,15 +148,9 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
                     if filetype == 'jpg':
                         filetype = 'jpeg'
 
-                    print(nombre, extension, filetype)
-                    ruta_thumbnail = str(id_lanzamiento) + nombrecorto + 'image_small' + extension
                     ruta = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image' + extension
+                    ruta_thumbnail = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image_small' + extension
 
-                    im = Image.open(imagen)
-                    im.thumbnail(resize(200, im.size[0], im.size[1]))
-                    #im.save(ruta_thumbnail)
-                    im.save(output_thumbnail, filetype)
-                    default_storage.save(ruta_thumbnail, output_thumbnail)
 
                     im = Image.open(imagen)
                     im.thumbnail(resize(800, im.size[0], im.size[1]))
@@ -168,6 +162,19 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
                         ruta,
                         'image/' + filetype,
                         sys.getsizeof(output),
+                        None
+                    )
+
+                    im = Image.open(imagen)
+                    im.thumbnail(resize(200, im.size[0], im.size[1]))
+                    im.save(output_thumbnail, filetype)
+
+                    nueva_entrada.imagen_thumbnail = InMemoryUploadedFile(
+                        output_thumbnail,
+                        'FileField',
+                        ruta_thumbnail,
+                        'image/' + filetype,
+                        sys.getsizeof(output_thumbnail),
                         None
                     )
         except Exception as e:
@@ -211,14 +218,8 @@ class LanzamientoCreateView(LoginRequiredMixin, FormView):
             if filetype == 'jpg':
                 filetype = 'jpeg'
             
-            ruta_thumbnail = str(id_lanzamiento) + nombrecorto + 'image_small' + extension
             ruta = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image' + extension
-
-            im = Image.open(imagen)
-            im.thumbnail(resize(200, im.size[0], im.size[1]))
-            #im.save(ruta_thumbnail)
-            im.save(output_thumbnail, filetype)
-            default_storage.save(ruta_thumbnail, output_thumbnail)
+            ruta_thumbnail = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image_small' + extension
 
             im = Image.open(imagen)
             im.thumbnail(resize(800, im.size[0], im.size[1]))
@@ -230,6 +231,19 @@ class LanzamientoCreateView(LoginRequiredMixin, FormView):
                 ruta,
                 'image/' + filetype,
                 sys.getsizeof(output),
+                None
+            )
+
+            im = Image.open(imagen)
+            im.thumbnail(resize(200, im.size[0], im.size[1]))
+            im.save(output_thumbnail, filetype)
+
+            nueva_entrada.imagen_thumbnail = InMemoryUploadedFile(
+                output_thumbnail,
+                'FileField',
+                ruta_thumbnail,
+                'image/' + filetype,
+                sys.getsizeof(output_thumbnail),
                 None
             )
         
