@@ -17,6 +17,7 @@ Lista - El Muladar
       <th>Youtube</th>
       <th>Bandas</th>
       <th>Disponible</th>
+      <th>Imagen</th>
     </tr>
   <p><h2>Lanzamientos</h2></p>
   
@@ -44,7 +45,7 @@ Lista - El Muladar
           </th>
           <th>
               {% if lanzamiento.link %}
-                Sí
+                <a href="{{ lanzamiento.link }}">Sí</a>
               {% else %}
                 <p class="rojo">No</p>
               {% endif %}
@@ -52,7 +53,7 @@ Lista - El Muladar
   
           <th>
               {% if lanzamiento.link_youtube %}
-                Sí
+                <a href="{{ lanzamiento.link_youtube }}">Sí</a>
               {% else %}
                 <p class="rojo">No</p>
               {% endif %}
@@ -60,6 +61,13 @@ Lista - El Muladar
   
           <th>
               {% if lanzamiento.bandas %}
+                Sí
+              {% else %}
+                <p class="rojo">No</p>
+              {% endif %}
+          </th>
+          <th>
+              {% if lanzamiento.imagen %}
                 Sí
               {% else %}
                 <p class="rojo">No</p>

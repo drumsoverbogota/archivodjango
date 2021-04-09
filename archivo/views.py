@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 
 from django.db.models import Q
@@ -19,7 +20,7 @@ class IndexView(ListView):
     def get_queryset(self):
         return Entrada.objects.filter(tipo='noticia').order_by('-fecha')
 
-class ListaView(TemplateView):
+class ListaView(LoginRequiredMixin, TemplateView):
     template_name = 'archivo/lista.html'
     def get_context_data(self, **kwargs):
 
@@ -32,7 +33,7 @@ class ListaView(TemplateView):
 class AboutView(TemplateView):
     template_name = 'archivo/about.html'
 
-class AdminView(TemplateView):
+class AdminView(LoginRequiredMixin, TemplateView):
     template_name = 'archivo/admin.html'
 
 class ContactView(TemplateView):

@@ -90,9 +90,9 @@ class BandaEditView(LoginRequiredMixin, UpdateView):
         try:
             old_file = Banda.objects.get(id=id_banda).imagen
             if old_file and old_file != imagen:
-                old_nombre, old_extension = old_file.name.split('.')
-                old_ruta_thumbnail = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image_small.' + old_extension
-                old_ruta = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image.' + old_extension
+                old_nombre, old_extension = os.path.splitext(old_file.name)
+                old_ruta_thumbnail = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image_small' + old_extension
+                old_ruta = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image' + old_extension
                 old_file = Banda.objects.get(id=id_banda).imagen
                 if os.path.isfile(old_ruta):
                     os.remove(old_ruta)
@@ -101,16 +101,14 @@ class BandaEditView(LoginRequiredMixin, UpdateView):
             if imagen and old_file != imagen:
                 if imagen:
                     output = BytesIO()
-
-                    nombre, extension = str(imagen).split('.')
-
+                    nombre, extension = os.path.splitext(str(imagen))
                     extension = extension.lower()
-                    filetype = extension
+                    filetype = extension[1:]
                     if filetype == 'jpg':
                         filetype = 'jpeg'
                     
-                    ruta_thumbnail = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image_small.' + extension
-                    ruta = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image.' + extension
+                    ruta_thumbnail = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image_small' + extension
+                    ruta = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image' + extension
 
                     im = Image.open(imagen)
                     im.thumbnail(resize(200, im.size[0], im.size[1]))
@@ -120,7 +118,7 @@ class BandaEditView(LoginRequiredMixin, UpdateView):
                     im.thumbnail(resize(800, im.size[0], im.size[1]))
                     im.save(output, filetype)
 
-                    imagen = InMemoryUploadedFile(
+                    nueva_entrada.imagen = InMemoryUploadedFile(
                         output,
                         'FileField',
                         ruta,
@@ -129,7 +127,7 @@ class BandaEditView(LoginRequiredMixin, UpdateView):
                         None
                     )
         except Exception as e:
-            print("No existe el archivo!", e)
+            print("Error subiendo los archivos!", e)
 
 
 
@@ -165,15 +163,16 @@ class BandaCreateView(LoginRequiredMixin, FormView):
         if imagen:
             output = BytesIO()
 
-            nombre, extension = str(imagen).split('.')
+            nombre, extension = os.path.splitext(str(imagen))
 
             extension = extension.lower()
-            filetype = extension
+            filetype = extension[1:]
             if filetype == 'jpg':
                 filetype = 'jpeg'
             
-            ruta_thumbnail = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image_small.' + extension
-            ruta = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image.' + extension
+            print(nombre, extension, filetype)
+            ruta_thumbnail = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image_small' + extension
+            ruta = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image' + extension
 
             im = Image.open(imagen)
             im.thumbnail(resize(200, im.size[0], im.size[1]))
@@ -183,7 +182,7 @@ class BandaCreateView(LoginRequiredMixin, FormView):
             im.thumbnail(resize(800, im.size[0], im.size[1]))
             im.save(output, filetype)
 
-            imagen = InMemoryUploadedFile(
+            nueva_entrada.imagen = InMemoryUploadedFile(
                 output,
                 'FileField',
                 ruta,

@@ -77,6 +77,9 @@ table, th, td {
     border: 1px solid black;
 }		
 
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
 
 .top-image {
     display: block;

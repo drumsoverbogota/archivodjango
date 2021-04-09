@@ -29,9 +29,10 @@ FORMATOS = (
 )
 
 def upload_location(instance, filename):
-    filebase, extension = filename.split('.')
+
+    filebase, extension = os.path.splitext(filename)
     nombre = str(instance.id) + instance.nombrecorto + 'image'
-    return '%s.%s' % (nombre, extension)
+    return '%s%s' % (nombre, extension)
 
 def resize(max_width, width, height):
     wpercent = (max_width/float(width))
@@ -70,7 +71,7 @@ class Banda(models.Model):
     extranjera = models.BooleanField()
     fecha_creacion = models.DateTimeField(blank=True, null=True)
     fecha_modificacion = models.DateTimeField(blank=True, null=True)
-    lanzamientos = models.ManyToManyField('Lanzamiento', through='BandaLanzamiento')
+    lanzamientos = models.ManyToManyField('Lanzamiento', through='BandaLanzamiento', blank=True)
 
     class Meta:
         managed = False
@@ -109,7 +110,7 @@ class Lanzamiento(models.Model):
     fecha_modificacion = models.DateTimeField(blank=True, null=True)
     visible = models.BooleanField()
     disponible = models.BooleanField()
-    bandas = models.ManyToManyField('Banda', through='BandaLanzamiento')
+    bandas = models.ManyToManyField('Banda', through='BandaLanzamiento', blank=True)
 
     class Meta:
         managed = False
