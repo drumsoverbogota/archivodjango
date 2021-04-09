@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.shortcuts import render
 
@@ -140,6 +141,7 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
             if imagen and old_file != imagen:
                 if imagen:
                     output = BytesIO()
+                    output_thumbnail = BytesIO()
                     nombre, extension = os.path.splitext(str(imagen))
                     extension = extension.lower()
                     filetype = extension[1:]
@@ -152,7 +154,9 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
 
                     im = Image.open(imagen)
                     im.thumbnail(resize(200, im.size[0], im.size[1]))
-                    im.save(ruta_thumbnail)
+                    #im.save(ruta_thumbnail)
+                    im.save(output_thumbnail, filetype)
+                    default_storage.save(ruta_thumbnail, output_thumbnail)
 
                     im = Image.open(imagen)
                     im.thumbnail(resize(800, im.size[0], im.size[1]))
@@ -198,6 +202,7 @@ class LanzamientoCreateView(LoginRequiredMixin, FormView):
 
         if imagen:
             output = BytesIO()
+            output_thumbnail = BytesIO()
 
             nombre, extension = os.path.splitext(str(imagen))
 
@@ -211,7 +216,9 @@ class LanzamientoCreateView(LoginRequiredMixin, FormView):
 
             im = Image.open(imagen)
             im.thumbnail(resize(200, im.size[0], im.size[1]))
-            im.save(ruta_thumbnail)
+            #im.save(ruta_thumbnail)
+            im.save(output_thumbnail, filetype)
+            default_storage.save(ruta_thumbnail, output_thumbnail)
 
             im = Image.open(imagen)
             im.thumbnail(resize(800, im.size[0], im.size[1]))
