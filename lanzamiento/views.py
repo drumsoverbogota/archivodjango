@@ -132,70 +132,72 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
 
 
         try:
-            old_file = Lanzamiento.objects.get(id=id_lanzamiento).imagen
-            if old_file and old_file != imagen:
-                old_nombre, old_extension = os.path.splitext(old_file.name)
-                old_ruta_thumbnail = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image_small' + old_extension
-                old_ruta = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image' + old_extension
+            if imagen:
                 old_file = Lanzamiento.objects.get(id=id_lanzamiento).imagen
-                logger.debug("Ruta imagen antigua: " + old_ruta)
-                logger.debug("Ruta thumbnail antigua: " + old_ruta_thumbnail)
-                if os.path.isfile(old_ruta):
-                    try:
-                        logger.debug("Tratando de eliminar " + old_ruta)
-                        os.remove(old_ruta)
-                        logger.debug("Exito!")
-                    except OSError as e:
-                        logger.error("Error borrando imagen! " + str(e))
-                if os.path.isfile(old_ruta_thumbnail):
-                    try:
-                        logger.debug("Tratando de eliminar " + old_ruta_thumbnail)
-                        os.remove(old_ruta_thumbnail)
-                        logger.debug("Exito!")
-                    except OSError as e:
-                        logger.error("Error borrando thumbnail! " + str(e))
-            if imagen and old_file != imagen:
-                if imagen:
-                    output = BytesIO()
-                    output_thumbnail = BytesIO()
-                    nombre, extension = os.path.splitext(str(imagen))
-                    extension = extension.lower()
-                    filetype = extension[1:]
-                    if filetype == 'jpg':
-                        filetype = 'jpeg'
+                if old_file:
+                    logger.debug("Borrando imagen antigua...")
+                    old_nombre, old_extension = os.path.splitext(old_file.name)
+                    old_ruta_thumbnail = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image_small' + old_extension
+                    old_ruta = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image' + old_extension
+                    old_file = Lanzamiento.objects.get(id=id_lanzamiento).imagen
+                    logger.debug("Ruta imagen antigua: " + old_ruta)
+                    logger.debug("Ruta thumbnail antigua: " + old_ruta_thumbnail)
+                    if os.path.isfile(old_ruta):
+                        try:
+                            logger.debug("Tratando de eliminar " + old_ruta)
+                            os.remove(old_ruta)
+                            logger.debug("Exito!")
+                        except OSError as e:
+                            logger.error("Error borrando imagen! " + str(e))
+                    if os.path.isfile(old_ruta_thumbnail):
+                        try:
+                            logger.debug("Tratando de eliminar " + old_ruta_thumbnail)
+                            os.remove(old_ruta_thumbnail)
+                            logger.debug("Exito!")
+                        except OSError as e:
+                            logger.error("Error borrando thumbnail! " + str(e))
 
-                    ruta = str(id_lanzamiento) + nombrecorto + 'image' + extension
-                    ruta_thumbnail = str(id_lanzamiento) + nombrecorto + 'image_small' + extension
+                logger.debug("Guardando imagen...")
+                output = BytesIO()
+                output_thumbnail = BytesIO()
+                nombre, extension = os.path.splitext(str(imagen))
+                extension = extension.lower()
+                filetype = extension[1:]
+                if filetype == 'jpg':
+                    filetype = 'jpeg'
 
-                    logger.debug("La ruta de la imagen es " + str(ruta))
-                    logger.debug("La ruta del thumbnail es " + str(ruta_thumbnail))
+                ruta = str(id_lanzamiento) + nombrecorto + 'image' + extension
+                ruta_thumbnail = str(id_lanzamiento) + nombrecorto + 'image_small' + extension
+
+                logger.debug("La ruta de la imagen es " + str(ruta))
+                logger.debug("La ruta del thumbnail es " + str(ruta_thumbnail))
 
 
-                    im = Image.open(imagen)
-                    im.thumbnail(resize(800, im.size[0], im.size[1]))
-                    im.save(output, filetype)
+                im = Image.open(imagen)
+                im.thumbnail(resize(800, im.size[0], im.size[1]))
+                im.save(output, filetype)
 
-                    nueva_entrada.imagen = InMemoryUploadedFile(
-                        output,
-                        'FileField',
-                        ruta,
-                        'image/' + filetype,
-                        sys.getsizeof(output),
-                        None
-                    )
+                nueva_entrada.imagen = InMemoryUploadedFile(
+                    output,
+                    'FileField',
+                    ruta,
+                    'image/' + filetype,
+                    sys.getsizeof(output),
+                    None
+                )
 
-                    im = Image.open(imagen)
-                    im.thumbnail(resize(200, im.size[0], im.size[1]))
-                    im.save(output_thumbnail, filetype)
+                im = Image.open(imagen)
+                im.thumbnail(resize(200, im.size[0], im.size[1]))
+                im.save(output_thumbnail, filetype)
 
-                    nueva_entrada.imagen_thumbnail = InMemoryUploadedFile(
-                        output_thumbnail,
-                        'FileField',
-                        ruta_thumbnail,
-                        'image/' + filetype,
-                        sys.getsizeof(output_thumbnail),
-                        None
-                    )
+                nueva_entrada.imagen_thumbnail = InMemoryUploadedFile(
+                    output_thumbnail,
+                    'FileField',
+                    ruta_thumbnail,
+                    'image/' + filetype,
+                    sys.getsizeof(output_thumbnail),
+                    None
+                )
         except Exception as e:
             logger.error("Error subiendo los archivos!" + str(e))
 
