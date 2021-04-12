@@ -29,8 +29,11 @@ from .forms import OrderForm
 from io import BytesIO
 from PIL import Image
 
+import logging
 import os
 import sys
+
+logger = logging.getLogger(__name__)
 
 class LanzamientoIndexView(ListView):
     template_name = 'lanzamiento/index.html'
@@ -117,6 +120,7 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
 
+        logger.debug("Formulario válido, tratando de guardar las imagenes")
         nueva_entrada = form.save(commit=False)
 
         id_lanzamiento = nueva_entrada.id
@@ -136,14 +140,18 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
                 old_file = Lanzamiento.objects.get(id=id_lanzamiento).imagen
                 if os.path.isfile(old_ruta):
                     try:
+                        logger.debug("Tratando de eliminar " + old_ruta)
                         os.remove(old_ruta)
+                        logger.debug("Exito!")
                     except OSError as e:
-                        print("Error borrando imagen! ", e)
+                        logger.error("Error borrando imagen! " + str(e))
                 if os.path.isfile(old_ruta_thumbnail):
                     try:
+                        logger.debug("Tratando de eliminar " + old_ruta_thumbnail)
                         os.remove(old_ruta_thumbnail)
+                        logger.debug("Exito!")
                     except OSError as e:
-                        print("Error borrando thumbnail! ", e)
+                        logger.error("Error borrando thumbnail! " + str(e))
             if imagen and old_file != imagen:
                 if imagen:
                     output = BytesIO()
@@ -156,6 +164,9 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
 
                     ruta = str(id_lanzamiento) + nombrecorto + 'image' + extension
                     ruta_thumbnail = str(id_lanzamiento) + nombrecorto + 'image_small' + extension
+
+                    logger.debug("La ruta de la imagen es " + str(ruta))
+                    logger.debug("La ruta del thumbnail es " + str(ruta_thumbnail))
 
 
                     im = Image.open(imagen)
@@ -175,7 +186,7 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
                     im.thumbnail(resize(200, im.size[0], im.size[1]))
                     im.save(output_thumbnail, filetype)
 
-                    nueva_entrada.imagen = InMemoryUploadedFile(
+                    nueva_entrada.imagen_thumbnail = InMemoryUploadedFile(
                         output_thumbnail,
                         'FileField',
                         ruta_thumbnail,
@@ -184,8 +195,12 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
                         None
                     )
         except Exception as e:
-            print("Error subiendo los archivos!", e)
+            logger.error("Error subiendo los archivos!" + str(e))
 
+        logger.debug("La imagen a guardar es")
+        logger.debug(nueva_entrada.imagen)
+        logger.debug("El thumbnail a guardar es")
+        logger.debug(nueva_entrada.imagen_thumbnail)
         nueva_entrada.save()
         form.save_m2m()
         self.success_url = reverse('lanzamiento:detail', kwargs={

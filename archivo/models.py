@@ -13,9 +13,12 @@ from PIL import Image
 from archivodjango.settings import MEDIA_ROOT
 from io import BytesIO
 
+import logging
 import os
 import re
 import sys
+
+logger = logging.getLogger(__name__)
 
 lista_formatos = ['CD', 'Digipack','12"','10"','7"','Flexi','Cassette','Digital','Mini CD','DVD','Otros','Bootleg']
 
@@ -111,8 +114,10 @@ class Lanzamiento(models.Model):
     link = models.TextField(blank=True, null=True)
     link_youtube = models.TextField(blank=True, null=True)
     indice_referencia = models.TextField(blank=True, null=True)
-    imagen = models.FileField(blank=True, null=True, upload_to=upload_location)
-    imagen_thumbnail = models.FileField(blank=True, null=True, upload_to=upload_location)
+    #imagen = models.FileField(blank=True, null=True, upload_to=upload_location)
+    imagen = models.FileField(blank=True, null=True)
+    #imagen_thumbnail = models.FileField(blank=True, null=True, upload_to=upload_location)
+    imagen_thumbnail = models.FileField(blank=True, null=True)
     fecha_creacion = models.DateTimeField(blank=True, null=True)
     fecha_modificacion = models.DateTimeField(blank=True, null=True)
     visible = models.BooleanField()
@@ -152,5 +157,11 @@ class Publicacion(models.Model):
 @receiver(post_delete, sender=Lanzamiento)
 @receiver(post_delete, sender=Publicacion)
 def submission_delete(sender, instance, **kwargs):
-    instance.imagen.delete(False) 
-    instance.imagen_thumbnail.delete(False)
+    logger.debug("Borrando imagen y thumbnail...")
+    try:
+        instance.imagen.delete(False) 
+        instance.imagen_thumbnail.delete(False)
+    except Exception as e:
+        logger.error("No se pudo borrar el archivo, error:" + str(e))
+    else:
+        logger.debug("Borrado exitoso")
