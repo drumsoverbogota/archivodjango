@@ -138,6 +138,8 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
                 old_ruta_thumbnail = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image_small' + old_extension
                 old_ruta = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image' + old_extension
                 old_file = Lanzamiento.objects.get(id=id_lanzamiento).imagen
+                logger.debug("Ruta imagen antigua: " + old_ruta)
+                logger.debug("Ruta thumbnail antigua: " + old_ruta_thumbnail)
                 if os.path.isfile(old_ruta):
                     try:
                         logger.debug("Tratando de eliminar " + old_ruta)
