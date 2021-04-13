@@ -62,8 +62,12 @@ class PublicacionEditView(LoginRequiredMixin, UpdateView):
 
         old_entrada = Publicacion.objects.get(id=id_publicacion)
 
+        post_request = self.request.POST.get
+
         try:
-            if imagen:
+            if post_request('imagen') != '':
+                logger.debug('La imagen es')
+                logger.debug(imagen)
                 old_file = old_entrada.imagen
                 if old_file:
                     logger.debug("Borrando imagen antigua...")
@@ -129,8 +133,11 @@ class PublicacionEditView(LoginRequiredMixin, UpdateView):
                     None
                 )
             else:
-                old_entrada.imagen.delete(False)
-                old_entrada.imagen_thumbnail.delete(False)
+                logger.debug('El valor de image-clear')
+                logger.debug(post_request('imagen-clear'))
+                if post_request('imagen-clear') == 'on':
+                    old_entrada.imagen.delete(False)
+                    old_entrada.imagen_thumbnail.delete(False)
 
         except Exception as e:
             logger.error("Error subiendo los archivos!" + str(e))
