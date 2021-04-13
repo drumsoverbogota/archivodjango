@@ -25,8 +25,11 @@ from .forms import BandaForm
 from io import BytesIO
 from PIL import Image
 
+import logging
 import os
 import sys
+
+logger = logging.getLogger(__name__)
 
 class BandaIndexView(ListView):
     template_name = 'banda/index.html'
@@ -86,53 +89,82 @@ class BandaEditView(LoginRequiredMixin, UpdateView):
 
         imagen = nueva_entrada.imagen
 
+        old_entrada = Banda.objects.get(id=id_banda)
 
         try:
-            old_file = Banda.objects.get(id=id_banda).imagen
-            if old_file and old_file != imagen:
-                old_nombre, old_extension = os.path.splitext(old_file.name)
-                old_ruta_thumbnail = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image_small' + old_extension
-                old_ruta = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image' + old_extension
-                old_file = Banda.objects.get(id=id_banda).imagen
-                if os.path.isfile(old_ruta):
-                    os.remove(old_ruta)
-                if os.path.isfile(old_ruta_thumbnail):
-                    os.remove(old_ruta_thumbnail)
-            if imagen and old_file != imagen:
-                if imagen:
-                    output = BytesIO()
-                    nombre, extension = os.path.splitext(str(imagen))
-                    extension = extension.lower()
-                    filetype = extension[1:]
-                    if filetype == 'jpg':
-                        filetype = 'jpeg'
-                    
-                    ruta_thumbnail = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image_small' + extension
-                    ruta = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image' + extension
+            if imagen:
+                old_file = old_entrada.imagen
+                if old_file:
+                    logger.debug("Borrando imagen antigua...")
+                    old_nombre, old_extension = os.path.splitext(old_file.name)
+                    old_ruta_thumbnail = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image_small' + old_extension
+                    old_ruta = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image' + old_extension
+                    old_file = Banda.objects.get(id=id_banda).imagen
+                    logger.debug("Ruta imagen antigua: " + old_ruta)
+                    logger.debug("Ruta thumbnail antigua: " + old_ruta_thumbnail)
+                    if os.path.isfile(old_ruta):
+                        try:
+                            logger.debug("Tratando de eliminar " + old_ruta)
+                            os.remove(old_ruta)
+                            logger.debug("Exito!")
+                        except OSError as e:
+                            logger.error("Error borrando imagen! " + str(e))
+                    if os.path.isfile(old_ruta_thumbnail):
+                        try:
+                            logger.debug("Tratando de eliminar " + old_ruta_thumbnail)
+                            os.remove(old_ruta_thumbnail)
+                            logger.debug("Exito!")
+                        except OSError as e:
+                            logger.error("Error borrando thumbnail! " + str(e))
 
-                    im = Image.open(imagen)
-                    im.thumbnail(resize(200, im.size[0], im.size[1]))
-                    im.save(ruta_thumbnail)
+                logger.debug("Guardando imagen...")
+                output = BytesIO()
+                output_thumbnail = BytesIO()
+                nombre, extension = os.path.splitext(str(imagen))
+                extension = extension.lower()
+                filetype = extension[1:]
+                if filetype == 'jpg':
+                    filetype = 'jpeg'
+                
+                ruta_thumbnail = str(id_banda) + nombrecorto + 'image_small' + extension
+                ruta = str(id_banda) + nombrecorto + 'image' + extension
 
-                    im = Image.open(imagen)
-                    im.thumbnail(resize(800, im.size[0], im.size[1]))
-                    im.save(output, filetype)
+                logger.debug("La ruta de la imagen es " + str(ruta))
+                logger.debug("La ruta del thumbnail es " + str(ruta_thumbnail))
 
-                    nueva_entrada.imagen = InMemoryUploadedFile(
-                        output,
-                        'FileField',
-                        ruta,
-                        'image/' + filetype,
-                        sys.getsizeof(output),
-                        None
-                    )
+                im = Image.open(imagen)
+                im.thumbnail(resize(800, im.size[0], im.size[1]))
+                im.save(output, filetype)
+
+                nueva_entrada.imagen = InMemoryUploadedFile(
+                    output,
+                    'FileField',
+                    ruta,
+                    'image/' + filetype,
+                    sys.getsizeof(output),
+                    None
+                )
+
+                im = Image.open(imagen)
+                im.thumbnail(resize(200, im.size[0], im.size[1]))
+                im.save(output_thumbnail, filetype)
+
+                nueva_entrada.imagen_thumbnail = InMemoryUploadedFile(
+                    output_thumbnail,
+                    'FileField',
+                    ruta_thumbnail,
+                    'image/' + filetype,
+                    sys.getsizeof(output_thumbnail),
+                    None
+                )
+            else:
+                old_entrada.imagen.delete(False)
+                old_entrada.imagen_thumbnail.delete(False)
+
         except Exception as e:
-            print("Error subiendo los archivos!", e)
-
-
+            logger.error("Error subiendo los archivos!" + str(e))
 
         nueva_entrada.save()
-
         form.save_m2m()
         self.success_url = reverse('banda:detail', kwargs={
                                    'nombrecorto': nueva_entrada.nombrecorto})
@@ -162,6 +194,7 @@ class BandaCreateView(LoginRequiredMixin, FormView):
 
         if imagen:
             output = BytesIO()
+            output_thumbnail = BytesIO()
 
             nombre, extension = os.path.splitext(str(imagen))
 
@@ -170,13 +203,8 @@ class BandaCreateView(LoginRequiredMixin, FormView):
             if filetype == 'jpg':
                 filetype = 'jpeg'
             
-            print(nombre, extension, filetype)
-            ruta_thumbnail = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image_small' + extension
-            ruta = MEDIA_ROOT + str(id_banda) + nombrecorto + 'image' + extension
-
-            im = Image.open(imagen)
-            im.thumbnail(resize(200, im.size[0], im.size[1]))
-            im.save(ruta_thumbnail)
+            ruta = str(id_banda) + nombrecorto + 'image' + extension
+            ruta_thumbnail = str(id_banda) + nombrecorto + 'image_small' + extension
 
             im = Image.open(imagen)
             im.thumbnail(resize(800, im.size[0], im.size[1]))
@@ -188,6 +216,19 @@ class BandaCreateView(LoginRequiredMixin, FormView):
                 ruta,
                 'image/' + filetype,
                 sys.getsizeof(output),
+                None
+            )
+
+            im = Image.open(imagen)
+            im.thumbnail(resize(200, im.size[0], im.size[1]))
+            im.save(output_thumbnail, filetype)
+
+            nueva_entrada.imagen_thumbnail = InMemoryUploadedFile(
+                output_thumbnail,
+                'FileField',
+                ruta_thumbnail,
+                'image/' + filetype,
+                sys.getsizeof(output_thumbnail),
                 None
             )
         

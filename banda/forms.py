@@ -12,6 +12,7 @@ class BandaForm(ModelForm):
             'nombrecorto',
             'fecha_creacion', 
             'fecha_modificacion', 
+            'imagen_thumbnail',
             ]
         
         widgets = {

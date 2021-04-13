@@ -15,5 +15,6 @@ class PublicacionForm(ModelForm):
         exclude = [
             'nombrecorto',
             'fecha_creacion',
-            'fecha_modificacion'
+            'fecha_modificacion',
+            'imagen_thumbnail',
             ]

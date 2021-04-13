@@ -23,8 +23,11 @@ from .forms import PublicacionForm
 from io import BytesIO
 from PIL import Image
 
+import logging
 import os
 import sys
+
+logger = logging.getLogger(__name__)
 
 class PublicacionDetailView(TemplateView):
     template_name = 'publicacion/detail.html'
@@ -48,7 +51,6 @@ class PublicacionEditView(LoginRequiredMixin, UpdateView):
     slug_url_kwarg = 'nombrecorto'
 
     def form_valid(self, form):
-        print(form)
         nueva_entrada = form.save(commit=False)
 
         id_publicacion = nueva_entrada.id
@@ -57,42 +59,55 @@ class PublicacionEditView(LoginRequiredMixin, UpdateView):
         nueva_entrada.fecha_modificacion = timezone.now()
 
         imagen = nueva_entrada.imagen
-        print(imagen)        
+
+        old_entrada = Publicacion.objects.get(id=id_publicacion)
 
         try:
-            old_file = Publicacion.objects.get(id=id_publicacion).imagen
-            if old_file and old_file != imagen:
-                old_nombre, old_extension = old_file.name.split('.')
-                old_ruta_thumbnail = MEDIA_ROOT + str(id_publicacion) + nombrecorto + 'image_small.' + old_extension
-                old_ruta = MEDIA_ROOT + str(id_publicacion) + nombrecorto + 'image.' + old_extension
-                old_file = Publicacion.objects.get(id=id_publicacion).imagen
-                if os.path.isfile(old_ruta):
-                    os.remove(old_ruta)
-                if os.path.isfile(old_ruta_thumbnail):
-                    os.remove(old_ruta_thumbnail)
+            if imagen:
+                old_file = old_entrada.imagen
+                if old_file:
+                    logger.debug("Borrando imagen antigua...")
+                    old_nombre, old_extension = os.path.splitext(old_file.name)
+                    old_ruta_thumbnail = MEDIA_ROOT + str(id_publicacion) + nombrecorto + 'image_small' + old_extension
+                    old_ruta = MEDIA_ROOT + str(id_publicacion) + nombrecorto + 'image' + old_extension
+                    old_file = Publicacion.objects.get(id=id_publicacion).imagen
+                    logger.debug("Ruta imagen antigua: " + old_ruta)
+                    logger.debug("Ruta thumbnail antigua: " + old_ruta_thumbnail)
+                    if os.path.isfile(old_ruta):
+                        try:
+                            logger.debug("Tratando de eliminar " + old_ruta)
+                            os.remove(old_ruta)
+                            logger.debug("Exito!")
+                        except OSError as e:
+                            logger.error("Error borrando imagen! " + str(e))
+                    if os.path.isfile(old_ruta_thumbnail):
+                        try:
+                            logger.debug("Tratando de eliminar " + old_ruta_thumbnail)
+                            os.remove(old_ruta_thumbnail)
+                            logger.debug("Exito!")
+                        except OSError as e:
+                            logger.error("Error borrando thumbnail! " + str(e))
 
-            if imagen and old_file != imagen:
+                logger.debug("Guardando imagen...")
                 output = BytesIO()
-
+                output_thumbnail = BytesIO()
                 nombre, extension = str(imagen).split('.')
-
                 extension = extension.lower()
                 filetype = extension
                 if filetype == 'jpg':
                     filetype = 'jpeg'
                 
-                ruta_thumbnail = MEDIA_ROOT + str(id_publicacion) + nombrecorto + 'image_small.' + extension
-                ruta = MEDIA_ROOT + str(id_publicacion) + nombrecorto + 'image.' + extension
+                ruta_thumbnail = str(id_publicacion) + nombrecorto + 'image_small.' + extension
+                ruta =  str(id_publicacion) + nombrecorto + 'image.' + extension
 
-                im = Image.open(imagen)
-                im.thumbnail(resize(400, im.size[0], im.size[1]))
-                im.save(ruta_thumbnail)
+                logger.debug("La ruta de la imagen es " + str(ruta))
+                logger.debug("La ruta del thumbnail es " + str(ruta_thumbnail))
 
                 im = Image.open(imagen)
                 im.thumbnail(resize(800, im.size[0], im.size[1]))
                 im.save(output, filetype)
 
-                imagen = InMemoryUploadedFile(
+                nueva_entrada.imagen = InMemoryUploadedFile(
                     output,
                     'FileField',
                     ruta,
@@ -101,8 +116,24 @@ class PublicacionEditView(LoginRequiredMixin, UpdateView):
                     None
                 )
 
+                im = Image.open(imagen)
+                im.thumbnail(resize(200, im.size[0], im.size[1]))
+                im.save(output_thumbnail, filetype)
+
+                nueva_entrada.imagen_thumbnail = InMemoryUploadedFile(
+                    output_thumbnail,
+                    'FileField',
+                    ruta_thumbnail,
+                    'image/' + filetype,
+                    sys.getsizeof(output_thumbnail),
+                    None
+                )
+            else:
+                old_entrada.imagen.delete(False)
+                old_entrada.imagen_thumbnail.delete(False)
+
         except Exception as e:
-            print("No existe el archivo!", e)
+            logger.error("Error subiendo los archivos!" + str(e))
 
         nueva_entrada.save()
         form.save_m2m()
@@ -142,31 +173,41 @@ class PublicacionCreateView(LoginRequiredMixin, FormView):
 
         if imagen:
             output = BytesIO()
+            output_thumbnail = BytesIO()
 
-            nombre, extension = str(imagen).split('.')
+            nombre, extension = os.path.splitext(str(imagen))
 
             extension = extension.lower()
             filetype = extension
             if filetype == 'jpg':
                 filetype = 'jpeg'
             
-            ruta_thumbnail = MEDIA_ROOT + str(id_publicacion) + nombrecorto + 'image_small.' + extension
-            ruta = MEDIA_ROOT + str(id_publicacion) + nombrecorto + 'image.' + extension
-
-            im = Image.open(imagen)
-            im.thumbnail(resize(200, im.size[0], im.size[1]))
-            im.save(ruta_thumbnail)
+            ruta =  str(id_publicacion) + nombrecorto + 'image' + extension
+            ruta_thumbnail = str(id_publicacion) + nombrecorto + 'image_small' + extension
 
             im = Image.open(imagen)
             im.thumbnail(resize(800, im.size[0], im.size[1]))
             im.save(output, filetype)
 
-            imagen = InMemoryUploadedFile(
+            nueva_entrada.imagen = InMemoryUploadedFile(
                 output,
                 'FileField',
                 ruta,
                 'image/' + filetype,
                 sys.getsizeof(output),
+                None
+            )
+
+            im = Image.open(imagen)
+            im.thumbnail(resize(200, im.size[0], im.size[1]))
+            im.save(output_thumbnail, filetype)
+
+            nueva_entrada.imagen_thumbnail = InMemoryUploadedFile(
+                output_thumbnail,
+                'FileField',
+                ruta_thumbnail,
+                'image/' + filetype,
+                sys.getsizeof(output_thumbnail),
                 None
             )
 

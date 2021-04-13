@@ -18,7 +18,7 @@
 {% if publicacion.imagen %}
 	<a href="{{ publicacion.imagen.url }}"><IMG class = 'view-na' SRC="{{ publicacion.imagen.url | add_suffix }}"></IMG></a>
 {% else %}
-	<img class = 'view-image' src="{% static 'archivo/placeholder.gif' %}" ALIGN="RIGHT">
+	<img class = 'view-na' src="{% static 'archivo/placeholder.gif' %}">
 {% endif %}
 </p>
 

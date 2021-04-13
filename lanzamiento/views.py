@@ -130,10 +130,11 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
 
         imagen = nueva_entrada.imagen
 
+        old_entrada = Lanzamiento.objects.get(id=id_lanzamiento)
 
         try:
             if imagen:
-                old_file = Lanzamiento.objects.get(id=id_lanzamiento).imagen
+                old_file = old_entrada.imagen
                 if old_file:
                     logger.debug("Borrando imagen antigua...")
                     old_nombre, old_extension = os.path.splitext(old_file.name)
@@ -172,7 +173,6 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
                 logger.debug("La ruta de la imagen es " + str(ruta))
                 logger.debug("La ruta del thumbnail es " + str(ruta_thumbnail))
 
-
                 im = Image.open(imagen)
                 im.thumbnail(resize(800, im.size[0], im.size[1]))
                 im.save(output, filetype)
@@ -198,13 +198,12 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
                     sys.getsizeof(output_thumbnail),
                     None
                 )
+            else:
+                old_entrada.imagen.delete(False)
+                old_entrada.imagen_thumbnail.delete(False)
         except Exception as e:
             logger.error("Error subiendo los archivos!" + str(e))
 
-        logger.debug("La imagen a guardar es")
-        logger.debug(nueva_entrada.imagen)
-        logger.debug("El thumbnail a guardar es")
-        logger.debug(nueva_entrada.imagen_thumbnail)
         nueva_entrada.save()
         form.save_m2m()
         self.success_url = reverse('lanzamiento:detail', kwargs={
@@ -243,7 +242,7 @@ class LanzamientoCreateView(LoginRequiredMixin, FormView):
             if filetype == 'jpg':
                 filetype = 'jpeg'
             
-            ruta = MEDIA_ROOT + str(id_lanzamiento) + nombrecorto + 'image' + extension
+            ruta = str(id_lanzamiento) + nombrecorto + 'image' + extension
             ruta_thumbnail = str(id_lanzamiento) + nombrecorto + 'image_small' + extension
 
             im = Image.open(imagen)
@@ -271,7 +270,7 @@ class LanzamientoCreateView(LoginRequiredMixin, FormView):
                 sys.getsizeof(output_thumbnail),
                 None
             )
-        
+
         nueva_entrada.save()
         form.save_m2m()
 

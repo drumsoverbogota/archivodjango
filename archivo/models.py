@@ -31,17 +31,6 @@ FORMATOS = (
     )
 )
 
-def upload_location(instance, filename):
-    suffix = 'image'
-    filename_suffix_position = filename.find('image')
-    filename_suffix = filename[filename_suffix_position:]
-    if 'small' in filename_suffix:
-        suffix = 'image_small'
-    
-    filebase, extension = os.path.splitext(filename)
-    nombre = str(instance.id) + instance.nombrecorto + suffix 
-    return '%s%s' % (nombre, extension)
-
 def resize(max_width, width, height):
     wpercent = (max_width/float(width))
     hsize = int((float(height)*float(wpercent)))
@@ -114,9 +103,7 @@ class Lanzamiento(models.Model):
     link = models.TextField(blank=True, null=True)
     link_youtube = models.TextField(blank=True, null=True)
     indice_referencia = models.TextField(blank=True, null=True)
-    #imagen = models.FileField(blank=True, null=True, upload_to=upload_location)
     imagen = models.FileField(blank=True, null=True)
-    #imagen_thumbnail = models.FileField(blank=True, null=True, upload_to=upload_location)
     imagen_thumbnail = models.FileField(blank=True, null=True)
     fecha_creacion = models.DateTimeField(blank=True, null=True)
     fecha_modificacion = models.DateTimeField(blank=True, null=True)
@@ -139,7 +126,8 @@ class Publicacion(models.Model):
     notas = models.TextField(blank=True, null=True)
     link = models.TextField(blank=True, null=True)
     indice_referencia = models.TextField(blank=True, null=True)
-    imagen = models.FileField(blank=True, null=True, upload_to=upload_location)
+    imagen = models.FileField(blank=True, null=True)
+    imagen_thumbnail = models.FileField(blank=True, null=True)
     fecha_creacion = models.DateTimeField(blank=True, null=True)
     fecha_modificacion = models.DateTimeField(blank=True, null=True)
     visible = models.BooleanField()
