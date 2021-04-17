@@ -6,8 +6,15 @@
 Bandas - El Muladar
 {% endblock %}
 
+{% block ogtitle %}
+Bandas - El Muladar
+{% endblock %}
+
 {% block content %}
 
+{% if user.is_authenticated %}
+	Admin: <a href="{% url 'banda:create' %}">Crear nueva banda</a>
+{% endif %}
 
 <h2>Lista de bandas</h2>
 <ul class='bandas'>

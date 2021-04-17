@@ -24,6 +24,10 @@ También empezamos a agregar los discos que aún no tenemos disponibles acá en 
 
 <p><h2>Noticias</h2></p>
 
+{% if user.is_authenticated %}
+	Admin: <a href="{% url 'entrada:create' %}">Crear nueva entrada</a>
+{% endif %}
+
 {% if ultimas_entradas_list %}
     {% for noticia in ultimas_entradas_list %}
         <h3>{{ noticia.titulo }} ({{ noticia.fecha }})</h3>
@@ -38,5 +42,26 @@ También empezamos a agregar los discos que aún no tenemos disponibles acá en 
 {% endif %}
 
 </div>
+
+<div align="center">
+Página
+  {% if page_obj.has_previous %}
+  <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+  {% else %}
+
+  {% endif %}
+  {% for i in paginator.page_range %}
+  {% if page_obj.number == i %}
+  <b>{{ i }}</b>
+  {% else %}
+  <a href="?page={{ i }}">{{ i }}</a>
+  {% endif %}
+  {% endfor %}
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+  {% endif %}
+  
+</div>
+
 
 {% endblock %}

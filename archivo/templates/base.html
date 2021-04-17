@@ -7,9 +7,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="{% static 'archivo/favicon.ico' type='image/x-icon' %}">
     <title>{% block title %}El Muladar{% endblock %}</title>
-	<meta property="og:title" content="El Muladar" />
+	<meta property="og:title" content="{% block ogtitle %}El Muladar {% endblock ogtitle %}"/>
 	<meta property="og:description" content="{% block description %}El Muladar es un archivo de Punk Colombiano de libre acceso.{% endblock %}" />
-    <meta property="og:image" content="{% block imagen %}{% endblock %}" />
+    <meta property="og:image" content="{% block imagen %}{% fullstatic 'archivo/logo.png' %}{% endblock %}" />
 	<meta property="og:type" content="website"/>
 	
 </head>

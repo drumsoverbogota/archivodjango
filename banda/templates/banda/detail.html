@@ -1,9 +1,26 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load fullurl %}
 {% load banda_filters %}
 {% block title %}
 {{ banda.nombre }} - El Muladar
+{% endblock %}
+
+{% block ogtitle %}
+{{ banda.nombre }} - El Muladar
+{% endblock %}
+
+{% block description %}
+Pagina con información de la banda {{ banda.nombre }}
+{% endblock %}
+
+{% block imagen %}
+	{% if banda.imagen %}
+		{% buildfullurl banda.imagen.url %}
+	{% else %}
+		{% fullstatic "archivo/logo.png" %}
+	{% endif %}
 {% endblock %}
 
 {% block content %}

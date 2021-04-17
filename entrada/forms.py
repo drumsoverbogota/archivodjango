@@ -7,7 +7,7 @@ from .models import Entrada
 class CreateEntradaForm(ModelForm):
     class Meta:
         model = Entrada
-        exclude = ['fecha']
+        exclude = ['fecha', 'resumen']
         widgets = {
             'titulo': TextInput(attrs={'size': 50,'maxlength': 100}),
             'contenido': Textarea(attrs={'cols': 80, 'rows': 20}),

@@ -6,8 +6,15 @@
 Lanzamientos - El Muladar
 {% endblock %}
 
+{% block ogtitle %}
+Lanzamientos - El Muladar
+{% endblock %}
+
 {% block content %}
 
+{% if user.is_authenticated %}
+	Admin: <a href="{% url 'lanzamiento:create' %}">Crear nuevo lanzamiento</a>
+{% endif %}
 
 <h2>Lanzamientos</h2>
 

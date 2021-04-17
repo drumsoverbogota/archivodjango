@@ -6,7 +6,15 @@
 Publicaciones - El Muladar
 {% endblock %}
 
+{% block ogtitle %}
+Publicaciones - El Muladar
+{% endblock %}
+
 {% block content %}
+
+{% if user.is_authenticated %}
+	Admin: <a href="{% url 'publicacion:create' %}">Crear nueva publicacion</a>
+{% endif %}
 
 <h2>Lista de Fanzines y otras publicaciones</h2>
 

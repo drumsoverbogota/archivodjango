@@ -1,13 +1,35 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load fullurl %}
 {% load lanzamiento_filters %}
 {% block title %}
 {{ lanzamiento.nombre }} - El Muladar
 {% endblock %}
 
+{% block ogtitle %}
+{{ lanzamiento.nombre }} - El Muladar
+{% endblock %}
+
+{% block description %}
+{% if lanzamiento.bandas.all|length > 1 %}
+	Pagina con información del compilado {{ lanzamiento.nombre }}.
+{% else %}
+	Pagina con información del compilado {{ lanzamiento.nombre }} la banda {{ lanzamiento.bandas.all.0.nombre }}.
+{% endif %}
+
+{% endblock %}
+
+{% block imagen %}
+	{% if lanzamiento.imagen %}
+		{% buildfullurl lanzamiento.imagen.url %}
+	{% else %}
+		{% fullstatic "archivo/logo.png" %}
+	{% endif %}
+{% endblock %}
+
 {% block content %}
-	
+
 <p>
 {% if lanzamiento.imagen %}
 	<a href="{{ lanzamiento.imagen.url }}"><IMG class = 'view-na' SRC="{{ lanzamiento.imagen.url | add_suffix }}" ALIGN="RIGHT"></IMG></a>

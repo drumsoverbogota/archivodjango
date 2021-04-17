@@ -1,11 +1,28 @@
 
 {% extends "base.html" %}
 
+{% load fullurl %}
 {% block title %}
 {{ publicacion.nombre }} - El Muladar
 {% endblock %}
 {% load publicacion_filters %}
 {% load static %}
+
+{% block ogtitle %}
+{{ publicacion.nombre }} - El Muladar
+{% endblock %}
+
+{% block description %}
+Pagina con información de la publicacion "{{ publicacion.nombre }}"
+{% endblock %}
+
+{% block imagen %}
+	{% if publicacion.imagen %}
+		{% buildfullurl publicacion.imagen.url %}
+	{% else %}
+		{% fullstatic "archivo/logo.png" %}
+	{% endif %}
+{% endblock %}
 
 {% block content %}
 <p><h1>{{ publicacion.nombre }} 

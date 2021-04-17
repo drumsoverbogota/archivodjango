@@ -4,16 +4,20 @@
 About - El Muladar
 {% endblock %}
 
+{% block ogtitle %}
+About - El Muladar
+{% endblock %}
+
 {% block content %}
 <div class="center-justified">
 
 <h2>Acerca de</h2>
 
 <p>
-<strong>El Muladar </strong> es un archivo de Punk Colombiano que reune registros sonoros, audiovisuales y escritos desde los inicios del movimiento hasta el 2007.
+<strong>El Muladar </strong> es un archivo de Punk Colombiano que reune registros sonoros, audiovisuales y escritos de varias épocas en Colombia.
 </p>
 <p>
-Hace 7 años empezamos un proyecto llamado <strong>Síntoma de última década</strong> <a href="https://sintomadeultimadecada.wordpress.com">en forma de Blog</a>  con la idea de subir discos que no habían sido re-editados y que no estaban digitalizados, acompañados con algún pequeño escrito acerca del disco o como se obtuvo.
+Hace más de 10 años empezamos un proyecto llamado <strong>Síntoma de última década</strong> <a href="https://sintomadeultimadecada.wordpress.com">en forma de Blog</a>  con la idea de subir discos que no habían sido re-editados y que no estaban digitalizados, acompañados con algún pequeño escrito acerca del disco o como se obtuvo.
 </p>
 
 <p>
@@ -21,9 +25,8 @@ Con el tiempo hacer esto consumía mucho tiempo y no era tan fácil encontrar es
 </p>
 
 <p>
-Este es un proyecto autogestionado. El material acá presente se ha conseguido entre prestamos de amigos o amigos de amigos y partes de las (pequeñas) colecciones personales. Por tanto si usted, persona lectora de estas líneas, tiene algo que no se encuentre acá que quiera ora prestarnos (¡prometemos cuidarlo muy bien!) ora donarnos, <a href="{% url 'archivo:contact' %}">acá nos puede contactar</a>. 
+Este es un proyecto autogestionado. El material acá presente se ha conseguido entre prestamos de amig@s o amig@s de amig@s y partes de las (pequeñas) colecciones personales. Por tanto si usted, persona lectora de estas líneas, tiene algo que no se encuentre acá que quiera ora prestarnos (¡prometemos cuidarlo muy bien!) ora donarnos, <a href="{% url 'archivo:contact' %}">acá nos puede contactar</a>. 
 </p>
-
 
 <p>
 Ningún derecho reservado, todo el material acá publicado es propiedad de sus compositor@s o autor@s. Por tanto,<b> no podemos dar la autorización de uso de nada de lo que está acá. Contacte a los autores o a sus representantes para obtener permiso.</b>
@@ -31,7 +34,10 @@ Ningún derecho reservado, todo el material acá publicado es propiedad de sus c
 
 <p><h2>Formato de los archivos</h2></p>
 
-Los archivos acá subidos están en formato <a href="https://es.wikipedia.org/wiki/FLAC">FLAC</a>. No todos los sistemas operativos soportan este formato nativamente así que si tiene problemas recomendamos usar un programa como <a href="https://www.videolan.org/vlc/index.html">VLC</a>.
+<del>Los archivos acá subidos están en formato <a href="https://es.wikipedia.org/wiki/FLAC">FLAC</a>. No todos los sistemas operativos soportan este formato nativamente así que si tiene problemas recomendamos usar un programa como <a href="https://www.videolan.org/vlc/index.html">VLC</a>.</del>
+<br>
+Lo anterior aplicaba mientras aún teníamos espacio, sin embargo el almacenamiento es caro y por ahora no tenemos muchas alternativas así que resubimos todo en formato MP3. Si quiere una versión FLAC de algo que está en el archivo, contactenos.
+
 
 <p><h2>Agradecimientos</h2></p>
 
@@ -42,11 +48,12 @@ Agradecer a tanta gente que hace que esto sea posible es difícil pero no nos gu
 	<li>A Sergio Galán por prestar varias de las cosas que están acá y ayudar a la ripeada de varias cosas.</li>
 	<li>A Álvaro David por más prestamos de C.D's y regalar algunas cosas de su colección.</li>
 	<li>A Memo por también prestar varias cosas incluidos ensayos y demos de Excomulgados.</li>
+	<li>A Humberto Junca por dejarme sacar muchas cosas muy buenas de su casa</li>
 </ul> 
 
 <p><h2>Otras cosas</h2></p>
 
-El código de esta página que ve esta disponible en <a href="https://github.com/drumsoverbogota/archivo">Github</a> por si quiere montar su propio archivo o algo así.
+El código de esta página que ve esta disponible en <a href="https://github.com/drumsoverbogota/archivodjango">Github</a> por si quiere montar su propio archivo o algo así. Esta versión es una nueva implementación, la versión anterior en PHP la puede encontrar <a href="https://github.com/drumsoverbogota/archivo">acá</a>.
 
 </div>
 

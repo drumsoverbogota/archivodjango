@@ -3,6 +3,15 @@
 {% block title %}
 {{ entrada.titulo }} - El Muladar
 {% endblock %}
+
+{% block ogtitle %}
+{{ entrada.titulo }} - El Muladar
+{% endblock %}
+
+{% block description %}
+{{ entrada.resumen|striptags }}
+{% endblock %}
+
 {% block content %}
 
 <div class="center-justified">

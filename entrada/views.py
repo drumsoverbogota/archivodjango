@@ -9,11 +9,18 @@ from django.views.generic import DeleteView
 from django.views.generic import ListView
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils.text import Truncator
 
+import logging
 from .models import Entrada
 from .forms import CreateEntradaForm
 
+logger = logging.getLogger(__name__)
+
+numero_resumen = 170
+
 class BlogIndexView(ListView):
+    paginate_by = 5
     template_name = 'entrada/index.html'
     context_object_name = 'entradas'
 
@@ -33,10 +40,15 @@ class EntradaEditView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
 
+        post_request = self.request.POST.get
+
         nueva_entrada = form.save(commit=False)
         nueva_entrada.fecha = timezone.now()
-        nueva_entrada.save()
 
+        if post_request('tipo') == 'blog':
+            nueva_entrada.resumen = Truncator(nueva_entrada.contenido).words(num=numero_resumen,html=True)
+
+        nueva_entrada.save()
         form.save_m2m()
         self.success_url = reverse('entrada:detail', kwargs={
                                    'pk': nueva_entrada.id})
@@ -50,10 +62,16 @@ class EntradaCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
 
+        post_request = self.request.POST.get
+
         nueva_entrada = form.save(commit=False)
         nueva_entrada.fecha = timezone.now()
-        nueva_entrada.save()
 
+        if post_request('tipo') == 'blog':
+            nueva_entrada.resumen = Truncator(nueva_entrada.contenido).words(num=numero_resumen,html=True)
+
+
+        nueva_entrada.save()
         form.save_m2m()
         self.success_url = reverse('entrada:detail', kwargs={
                                    'pk': nueva_entrada.id})
@@ -63,4 +81,4 @@ class EntradaDeleteView(LoginRequiredMixin, DeleteView):
     login_url = '/login'
     template_name = 'entrada/delete.html'
     model = Entrada
-    success_url = '/blog'
+    success_url = '/'

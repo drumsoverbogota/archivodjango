@@ -21,6 +21,7 @@ class IndexView(ListView):
         return Entrada.objects.filter(tipo='noticia').order_by('-fecha')
 
 class ListaView(LoginRequiredMixin, TemplateView):
+    login_url = '/login'
     template_name = 'archivo/lista.html'
     def get_context_data(self, **kwargs):
 
