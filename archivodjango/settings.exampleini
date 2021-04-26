@@ -1,0 +1,10 @@
+#Cambia el nombre de este archivo a settings.ini
+[settings]
+DEBUG=False
+MEDIA_ROOT=
+ALLOWED_HOSTS=
+SECRET_KEY=
+MYSQL_CONFIG_FILE=
+LOG_FILE=
+LOG_LEVEL=
+BLOG=

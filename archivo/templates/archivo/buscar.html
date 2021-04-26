@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}
+Buscar - El Muladar
+{% endblock %}
+
+
+{% block ogtitle %}
+Buscar - El Muladar
+{% endblock %}
+
+
+{% block content %}
+<!-- begin page content -->
+<p><b>Buscar</b></p>
+
+<form action="{% url 'archivo:buscar' %}" method="GET">
+    <label for="peticion">Palabra por la cual buscar</label>
+    <input type="input" name="peticion" value ="{{ peticion }}"/><br />
+    <input type="submit" value="Buscar" />
+</form>    
+<!-- end page content -->
+
+{% if peticion != "" %}
+
+	{% if bandas%}
+		<h3>Bandas que cumplen el criterio</h3>
+			{% for banda in bandas %}
+				<li>	
+				<a href="{% url 'banda:detail' banda.nombrecorto %}">{{ banda.nombre }}</a>
+				{% if banda.otros %}
+					({{ banda.otros }})
+				{% endif %}
+				</li>
+			{% endfor %}
+	{% endif %}
+
+	{% if lanzamientos %}
+		<h3>Lanzamientos que cumplen el criterio</h3>
+
+		<table style="width:100%">
+
+		<tr>
+			<th>Nombre</th>
+			<th>Referencia</th>  	
+			<th>Formato</th> 
+			<th>Año</th>
+		</tr>
+
+		{% for lanzamiento in lanzamientos %}
+			<tr>
+				<th>
+					<a href="{% url 'lanzamiento:detail' lanzamiento.nombrecorto %}">{{ lanzamiento.nombre }}</a></p>
+				</th>
+				<th>
+					{{ lanzamiento.referencia }}
+				</th>		
+				<th>
+					{{ lanzamiento.formato }}
+				</th>
+				<th>
+					{{ lanzamiento.anho }}
+				</th>      
+			</tr>
+		{% endfor %}
+
+	{% endif %}
+	{% if publicaciones %}
+
+		{% for publicacion in publicaciones %}
+			<h3>
+			Publicaciones que cumplen el criterio
+			</h3>		
+			<ul>
+				<li>
+					<a href="{% url 'publicacion:detail' publicacion.nombrecorto %}">{{ publicacion.nombre }} ({{ publicacion.fecha }})</a>
+				</li>
+			</ul>
+		{% endfor %}
+
+	{% endif %}
+{% endif %}
+
+{% endblock %}

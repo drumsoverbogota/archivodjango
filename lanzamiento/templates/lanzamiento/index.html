@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% load lanzamiento_filters %}
+
+{% block title %}
+Lanzamientos - El Muladar
+{% endblock %}
+
+{% block ogtitle %}
+Lanzamientos - El Muladar
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+	Admin: <a href="{% url 'lanzamiento:create' %}">Crear nuevo lanzamiento</a>
+{% endif %}
+
+<h2>Lanzamientos</h2>
+
+
+<table style="width:100%">
+
+  <tr>
+    <th>Nombre</th>
+	<th>Banda(s)</th>  
+	<th>Referencia</th>  	
+    <th>Formato</th> 
+    <th>Año</th>
+	{% if no_disponibles %}
+		<th>Disponible</th>
+	{% endif %}
+  </tr>
+
+<div align="right">
+  <form method="GET">
+		{{ order.numero.label_tag }} {{order.numero}}
+		{{ order.ordenar_por.label_tag }} {{order.ordenar_por}}
+		{{ order.orden.label_tag }} {{order.orden}}
+		{% if no_disponibles %}
+			<input type="hidden" name="no_disponibles" value="true">
+		{% endif %}
+	<input type="submit" value="Ordenar">
+  </form>
+</div>
+
+
+<div align="center">
+Página
+{% if page_obj.has_previous %}
+<a href="?{% param_replace page=page_obj.previous_page_number %}">&laquo;</a>
+{% else %}
+
+{% endif %}
+{% for i in paginator.page_range %}
+{% if page_obj.number == i %}
+<b>{{ i }}</b>
+{% else %}
+<a href="?{% param_replace page=i %}">{{ i }}</a>
+{% endif %}
+{% endfor %}
+{% if page_obj.has_next %}
+<a href="?{% param_replace page=page_obj.next_page_number %}">&raquo;</a>
+{% endif %}
+
+</div>
+
+{% for lanzamiento in lanzamientos %}
+	<tr>
+		<th>
+			<a href="{% url 'lanzamiento:detail' lanzamiento.nombrecorto %}">{{ lanzamiento.nombre }}</a></p>
+		</th>
+		<th>
+			{% for banda in lanzamiento.bandas.all %}
+				<a href="{% url 'banda:detail' banda.nombrecorto %}">{{banda.nombre}}</a><br>
+			{% endfor %}
+		</th>		
+		<th>
+			{{ lanzamiento.referencia }}
+		</th>		
+		<th>
+			{{ lanzamiento.formato }}
+		</th>
+		<th>
+			{{ lanzamiento.anho }}
+		</th>      
+		{% if no_disponibles %}
+			{% if lanzamiento.disponible %}
+				<th>Sí</th>
+			{% else %}
+				<th><p class="rojo">No</p></th>
+			{% endif %}
+		{% endif %}
+	</tr>
+{% endfor %}
+
+
+</table>
+
+<div align="center">
+Página
+{% if page_obj.has_previous %}
+<a href="?{% param_replace page=page_obj.previous_page_number %}">&laquo;</a>
+{% else %}
+
+{% endif %}
+{% for i in paginator.page_range %}
+{% if page_obj.number == i %}
+<b>{{ i }}</b>
+{% else %}
+<a href="?{% param_replace page=i %}">{{ i }}</a>
+{% endif %}
+{% endfor %}
+{% if page_obj.has_next %}
+<a href="?{% param_replace page=page_obj.next_page_number %}">&raquo;</a>
+{% endif %}
+
+</div>
+
+{% endblock %}

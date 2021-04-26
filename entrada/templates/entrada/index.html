@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}
+Blogs - El Muladar
+{% endblock %}
+{% block ogtitle %}
+Blogs - El Muladar
+{% endblock %}
+{% block content %}
+<p><h2>Blog</h2></p>
+
+{% if user.is_authenticated %}
+	Admin: <a href="{% url 'entrada:create' %}">Crear nueva entrada de blog</a>
+{% endif %}
+
+<div class="center-justified">
+    {% if entradas %}
+        {% if entradas.count > 0%}
+            {% for entrada in entradas %}
+				<h3>{{ entrada.titulo }} ({{ entrada.fecha }})</h3>
+                {{ entrada.resumen | safe }}
+				<br>
+				<a href="{% url 'entrada:detail' entrada.id %}">Leer entrada completa</a>
+                {% if user.is_authenticated %}
+                    <div align="right"><h5>
+                    <a href="{% url 'entrada:edit' entrada.id %}">Editar</a>|
+                    <a href="{% url 'entrada:delete' entrada.id %}">Borrar</a>
+                    </h5></div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+			<p>¡Aún no hay nada por acá!</p>
+        {% endif %}
+    {% endif %}
+</div>
+
+<div align="center">
+Página
+  {% if page_obj.has_previous %}
+  <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+  {% else %}
+
+  {% endif %}
+  {% for i in paginator.page_range %}
+  {% if page_obj.number == i %}
+  <b>{{ i }}</b>
+  {% else %}
+  <a href="?page={{ i }}">{{ i }}</a>
+  {% endif %}
+  {% endfor %}
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+  {% endif %}
+  
+</div>
+
+
+{% endblock %}

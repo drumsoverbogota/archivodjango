@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}
+Lista - El Muladar
+{% endblock %}
+
+{% block ogtitle %}
+Lista - El Muladar
+{% endblock %}
+
+{% block content %}
+
+
+<table style="width:100%">
+
+    <tr>
+      <th>Referencia</th>
+      <th>Nombre</th>  
+      <th>Visible</th>
+      <th>Link</th>
+      <th>Youtube</th>
+      <th>Bandas</th>
+      <th>Disponible</th>
+      <th>Imagen</th>
+    </tr>
+  <p><h2>Lanzamientos</h2></p>
+  
+    {% for lanzamiento in lanzamientos %}
+      <tr>
+          <th>
+              <a href="{% url 'lanzamiento:detail' lanzamiento.nombrecorto %}">
+                  {% if lanzamiento.indice_referencia %}
+                    {{ lanzamiento.indice_referencia }}
+                  {% else %}
+                    ND
+                  {% endif %}
+                  
+              </a></p>
+          </th>
+          <th>
+              {{ lanzamiento.nombre }}
+          </th>		
+          <th>
+              {% if lanzamiento.visible %}
+                Sí
+              {% else %}
+                <p class="rojo">No</p>
+              {% endif %}
+          </th>
+          <th>
+              {% if lanzamiento.link %}
+                <a href="{{ lanzamiento.link }}">Sí</a>
+              {% else %}
+                <p class="rojo">No</p>
+              {% endif %}
+          </th> 
+  
+          <th>
+              {% if lanzamiento.link_youtube %}
+                <a href="{{ lanzamiento.link_youtube }}">Sí</a>
+              {% else %}
+                <p class="rojo">No</p>
+              {% endif %}
+          </th> 
+  
+          <th>
+              {% if lanzamiento.bandas %}
+                Sí
+              {% else %}
+                <p class="rojo">No</p>
+              {% endif %}
+          </th>
+          <th>
+              {% if lanzamiento.imagen %}
+                Sí
+              {% else %}
+                <p class="rojo">No</p>
+              {% endif %}
+          </th>
+          <th>
+              {% if lanzamiento.disponible %}
+                Sí
+              {% else %}
+                <p class="rojo">No</p>
+              {% endif %}
+          </th> 	   		
+  
+      </tr>
+      {% endfor %}
+  </table>
+  
+  
+  <p><h2>Fanzines</h2></p>
+  
+  <table>
+  
+    <tr>
+      <th>Referencia</th>
+      <th>Nombre</th>  
+      <th>Número</th>  
+      <th>Visible</th>
+      <th>Link</th>
+    </tr>
+  
+      {% for publicacion in publicaciones %}
+          <tr>
+              <th>
+                  <a href="{% url 'publicacion:detail' publicacion.nombrecorto %}">{{publicacion.indice_referencia}}</a></p>
+              </th>
+              <th>
+                  {{ publicacion.nombre }}
+              </th>	
+              <th>
+                  {{ publicacion.numero }}
+              </th>					
+              <th>
+                {% if publicacion.visible %}
+                    Sí
+                {% else %}
+                    <p class="rojo">No</p>
+                {% endif %}
+              </th>
+              <th>
+                {% if publicacion.link %}
+                    Sí
+                {% else %}
+                    <p class="rojo">No</p>
+                {% endif %}
+              </th> 				
+          </tr>
+  
+        {% endfor %}
+  </table>
+
+{% endblock %}

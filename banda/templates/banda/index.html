@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% load banda_filters %}
+
+{% block title %}
+Bandas - El Muladar
+{% endblock %}
+
+{% block ogtitle %}
+Bandas - El Muladar
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+	Admin: <a href="{% url 'banda:create' %}">Crear nueva banda</a>
+{% endif %}
+
+<h2>Lista de bandas</h2>
+<ul class='bandas'>
+	{% if bandas %}
+		{% with '' as letra %}
+			{% for banda in bandas %}
+			{% if letra != banda.nombre|slice:1 %}
+				{% update_variable banda.nombre|slice:1 as letra %}
+				<b>{{letra}}</b>			
+			{% endif %}
+			<li>
+				<a href="{% url 'banda:detail' banda.nombrecorto %}">{{ banda.nombre }}</a>
+			</li>
+			{% endfor %}
+        {% endwith %}
+	{% endif %}
+</ul>
+
+</div>
+
+{% endblock %}
