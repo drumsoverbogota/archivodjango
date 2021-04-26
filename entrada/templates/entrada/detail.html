@@ -17,10 +17,13 @@
 <div class="center-justified">
     <h1>{{ entrada.titulo }} ({{ entrada.fecha }})</h1>
     {{ entrada.contenido | safe}}
+
+    {% if user.is_authenticated %}
     <div align="right"><h5>
         <a href="{% url 'entrada:edit' entrada.id %}">Editar</a>|
         <a href="{% url 'entrada:delete' entrada.id %}">Borrar</a></h5>
     </div>
+    {% endif %}
 </div>
 
 {% endblock %}

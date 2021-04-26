@@ -79,7 +79,7 @@ Pagina con información de la banda {{ banda.nombre }}
 </p>
 <hr>
 {% if nodisponible %}
-	<b class="rojo">Los discos marcados con * no los tenemos disponibles para descarga, más <a href="<?php echo site_url('entrada/'.$disponible_blog);?>">información acá.</a></b>
+	<b class="rojo">Los discos marcados con * no los tenemos disponibles para descarga, más <a href="{% url 'entrada:detail' blog %}">información acá.</a></b>
 {% endif %}
 
 {% if user.is_authenticated %}

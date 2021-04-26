@@ -134,6 +134,8 @@ LOGIN_REDIRECT_URL = '/'
 MEDIA_ROOT = config('MEDIA_ROOT', cast=str)
 MEDIA_URL = '/media/'
 
+ENTRADA_BLOG = config('BLOG', cast=str)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
