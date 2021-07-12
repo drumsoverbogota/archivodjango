@@ -3,6 +3,8 @@ from django.core.files.storage import default_storage
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.shortcuts import render
 
+from django.http import Http404
+
 # Create your views here.
 
 from django.utils import timezone
@@ -22,6 +24,7 @@ from archivo.models import Banda
 from archivo.models import BandaLanzamiento
 from archivo.models import Lanzamiento
 from archivodjango.settings import MEDIA_ROOT
+from archivodjango.settings import ENTRADA_BLOG
 
 from .forms import LanzamientoForm
 from .forms import OrderForm 
@@ -106,9 +109,13 @@ class LanzamientoDetailView(TemplateView):
         nombrecorto = kwargs['nombrecorto']
 
         context = super().get_context_data(**kwargs)
-        lanzamiento_object = Lanzamiento.objects.get(nombrecorto=nombrecorto)
-        context['lanzamiento'] = lanzamiento_object
-        return context
+        try:
+            lanzamiento_object = Lanzamiento.objects.get(nombrecorto=nombrecorto)
+            context['lanzamiento'] = lanzamiento_object
+            context['blog'] = ENTRADA_BLOG
+            return context
+        except Exception as e:
+            raise Http404(f"El lanzamiento con id {nombrecorto} no existe.")
 
 class LanzamientoEditView(LoginRequiredMixin, UpdateView):
     login_url = '/login'

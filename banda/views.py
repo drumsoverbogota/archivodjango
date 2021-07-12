@@ -4,6 +4,8 @@ from django.shortcuts import render
 
 # Create your views here.
 
+from django.http import Http404
+
 from django.utils import timezone
 
 from django.views.generic import DetailView
@@ -19,7 +21,6 @@ from archivo.models import resize
 from archivo.models import Banda
 from archivo.models import Lanzamiento
 from archivodjango.settings import MEDIA_ROOT
-from archivodjango.settings import ENTRADA_BLOG
 
 from .forms import BandaForm
 
@@ -59,18 +60,22 @@ class BandaDetailView(TemplateView):
         nombrecorto = kwargs['nombrecorto']
 
         context = super().get_context_data(**kwargs)
-        banda_object = Banda.objects.get(nombrecorto=nombrecorto)
-        context['banda'] = banda_object
+        
+        try:
+            banda_object = Banda.objects.get(nombrecorto=nombrecorto)
+            context['banda'] = banda_object
 
-        nodisponible = False
-        for banda in banda_object.lanzamientos.all():
-            if not banda.disponible:
-                nodisponible = True
+            nodisponible = False
+            for banda in banda_object.lanzamientos.all():
+                if not banda.disponible:
+                    nodisponible = True
 
-        context['nodisponible'] = nodisponible
-        context['blog'] = ENTRADA_BLOG
+            context['nodisponible'] = nodisponible
 
-        return context
+            return context
+        except Exception as e:
+            raise Http404(f"La banda con id {nombrecorto} no existe.")
+
 
 class BandaEditView(LoginRequiredMixin, UpdateView):
     login_url = '/login'
