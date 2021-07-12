@@ -8,6 +8,8 @@ from django.views.generic import ListView
 from django.views.generic import UpdateView
 from django.views.generic import TemplateView
 
+from django.http import Http404
+
 from django.utils import timezone
 from django.urls import reverse
 
@@ -36,11 +38,14 @@ class PublicacionDetailView(TemplateView):
 
         nombrecorto = kwargs['nombrecorto']
 
-        context = super().get_context_data(**kwargs)
-        publicacion_object = Publicacion.objects.get(nombrecorto=nombrecorto)
-        context['publicacion'] = publicacion_object
+        try:
+            context = super().get_context_data(**kwargs)
+            publicacion_object = Publicacion.objects.get(nombrecorto=nombrecorto)
+            context['publicacion'] = publicacion_object
 
-        return context
+            return context
+        except Exception as e:
+            raise Http404(f"La publicación con id {nombrecorto} no existe.")
 
 class PublicacionEditView(LoginRequiredMixin, UpdateView):
     login_url = '/login'
