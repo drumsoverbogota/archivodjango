@@ -1,0 +1,20 @@
+{% load static %}
+{% load fullurl %}
+
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static 'archivo/style.css' %}">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{% static 'archivo/favicon.ico' type='image/x-icon' %}">
+    <title>El Muladar - No encontrado!</title>
+	<meta property="og:title" content="El Muladar - No encontrado!"/>
+	<meta property="og:description" content="{% block description %}El Muladar es un archivo de Punk Colombiano de libre acceso.{% endblock %}" />
+    <meta property="og:image" content="{% fullstatic 'archivo/logo.png' %}" />
+	<meta property="og:type" content="website"/>
+	
+</head>
+<body>
+    <a href="https://www.youtube.com/watch?v=Ry5URU-Py2Q" target="_blank"><img class="top-image" src="{% static "archivo/whoops.jpeg" %}"></a>
+    <div align="center"><h5>¡No hay nada acá!</h5></div>
+    <a href="{% url 'archivo:index' %}"><div align="center"><h5>Volver a la página principal</h5></div></a>
+</body>
