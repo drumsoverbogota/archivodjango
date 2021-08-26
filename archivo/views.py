@@ -31,6 +31,20 @@ class ListaView(LoginRequiredMixin, TemplateView):
         context["publicaciones"] = Publicacion.objects.all()
         return context
 
+class FaltantesView(LoginRequiredMixin, TemplateView):
+    template_name = 'archivo/faltantes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["lanzamientos"] = Lanzamiento.objects.filter(
+            Q(portadas=False) |
+            Q(disco_digitalizado=False)
+        ).order_by('indice_referencia')
+        context["no_disponibles"] = Lanzamiento.objects.filter(
+            disponible=False
+        ).order_by('indice_referencia')
+        return context
+
 class AboutView(TemplateView):
     template_name = 'archivo/about.html'
 

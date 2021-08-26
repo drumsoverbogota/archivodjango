@@ -109,6 +109,9 @@ class Lanzamiento(models.Model):
     fecha_modificacion = models.DateTimeField(blank=True, null=True)
     visible = models.BooleanField()
     disponible = models.BooleanField()
+    portadas = models.BooleanField()
+    disco_digitalizado = models.BooleanField()
+    nota_digitalizacion = models.TextField(blank=True)
     bandas = models.ManyToManyField('Banda', through='BandaLanzamiento', blank=True)
 
     class Meta:

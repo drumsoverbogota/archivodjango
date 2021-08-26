@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load archivo_filters %}
+
+{% block title %}
+Lista - El Muladar
+{% endblock %}
+
+{% block ogtitle %}
+Lista - El Muladar
+{% endblock %}
+
+{% block content %}
+
+<p><h2>Grabaciones con algún elemento faltante.</h2></p>
+
+<p>
+  En esta lista están algunas grabaciones que hacen parte del archivo pero o bien no hemos digitalizado el disco nosotros o solo lo tenemos incompleto.
+  Si tiene alguna de las cosas que están acá en esta lista (o algo que pueda aportar a ese registro) agradeceríamos mucho que se pusiera en contacto con nosotros.
+</p>
+
+<table style="width:100%">
+
+    <tr>
+      <th>Grabación</th>
+      <th>Banda</th>  
+      <th>Falta portada</th>
+      <th>Falta disco</th>
+      <th>Nota</th>
+    </tr>
+  
+    {% for lanzamiento in lanzamientos %}
+      <tr>
+          <th>
+              <a href="{% url 'lanzamiento:detail' lanzamiento.nombrecorto %}">
+                {{ lanzamiento.nombre }}
+              </a>
+          </th>		
+          <th>
+              {{ lanzamiento.bandas.all | mostrar_bandas }}
+          </th>		
+          <th>
+              {% if lanzamiento.portadas %}
+                No
+              {% else %}
+                Sí
+              {% endif %}
+          </th>
+          <th>
+              {% if lanzamiento.disco_digitalizado %}
+                No
+              {% else %}
+                Sí
+              {% endif %}
+          </th> 
+          <th>
+              {{ lanzamiento.nota_digitalizacion | linebreaksbr }}
+          </th> 	   		
+  
+      </tr>
+      {% endfor %}
+  </table>
+  
+  
+  <p><h2>Grabaciones no disponibles.</h2></p>
+    <p>
+      En esta lista estan grabaciones que sabemos que existen pero no tenemos ningún registro de ellas. Si la tiene, agradeceríamos un prestamo para digitalizarla.
+    </p>
+    <table style="width:100%">
+      <tr>
+        <th>Banda</th>  
+        <th>Grabación</th>
+        <th>Nota</th>
+      </tr>
+    {% for lanzamiento in no_disponibles %}
+      <tr>
+          <th>
+              {{ lanzamiento.bandas.all | mostrar_bandas }}
+          </th>		
+          <th>
+              <a href="{% url 'lanzamiento:detail' lanzamiento.nombrecorto %}">
+                {{ lanzamiento.nombre }}
+              </a>
+          </th>		
+          <th>
+              {{ lanzamiento.nota_digitalizacion | linebreaksbr }}
+          </th> 	   		
+  
+      </tr>
+      {% endfor %}
+  </table>
+
+{% endblock %}

@@ -32,11 +32,14 @@
   
     <li> Archivo  
         <ul>
-              <li><a href="{% url 'lanzamiento:index' %}">Lanzamientos Disponibles</a></li>
+              <li><a href="{% url 'lanzamiento:index' %}">Grabaciones Disponibles</a></li>
+              {% comment %}
               <li><a href="{% url 'lanzamiento:index' %}?no_disponibles=true">Todos los lanzamientos</a></li>
+              {% endcomment %}
               <li><a href="{% url 'banda:index' %}">Bandas</a></li>
               <li><a href="{% url 'publicacion:index' %}">Fanzines y otras publicaciones</a></li>
               <li><a href="{% url 'archivo:buscar' %}">Buscar en el archivo</a></li>
+              <li><a href="{% url 'archivo:faltantes' %}">Faltantes</a></li>
         </ul>
     </li>
     <li><a href="{% url 'archivo:blog' %}">Blog</a></li>  

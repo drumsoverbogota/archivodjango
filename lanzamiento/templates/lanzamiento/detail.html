@@ -60,13 +60,29 @@
 {{ lanzamiento.creditos | linebreaksbr  }}
 {{ lanzamiento.notas | linebreaksbr  }}
 
+{% if not lanzamiento.portadas %}
+	<p>
+		<i>Nos falta la portadas de este disco, si tiene la copia y quiere que la digitalicemos, contáctenos.</i>
+	</p>
+{% endif%}
+
+{% if not lanzamiento.disco_digitalizado %}
+	<p>
+		<i>Este disco no fue digitalizado por nosotros, si tiene la copia y quiere que la digitalicemos, contáctenos.</i>
+	</p>
+{% endif%}
+
+{% if lanzamiento.nota_digitalizacion %}
+	<p><b>Nota digitalización</b></p>
+	{{ lanzamiento.nota_digitalizacion | linebreaksbr  }}
+{% endif%}
+
 <hr>
 
 {% if lanzamiento.link %}
 	<a href="{{lanzamiento.link}}">Link de descarga</a>
 {% else %}
 	¡No hay link disponible para descarga! 
-	<a href="{% url 'entrada:detail' blog %}">Para más información dar click acá</a>
 {% endif%}
 
 <br>
