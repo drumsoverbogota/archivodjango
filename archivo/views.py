@@ -39,9 +39,13 @@ class FaltantesView(TemplateView):
         context["lanzamientos"] = Lanzamiento.objects.filter(
             Q(portadas=False) |
             Q(disco_digitalizado=False)
-        ).filter(visible=True).order_by('indice_referencia')
+        ).filter(
+            disponible=True,
+            visible=True
+        ).order_by('indice_referencia')
         context["no_disponibles"] = Lanzamiento.objects.filter(
-            disponible=False, visible=True
+            disponible=False, 
+            visible=True
         ).order_by('indice_referencia')
         return context
 
