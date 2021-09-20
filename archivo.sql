@@ -212,3 +212,5 @@ COMMIT;
 ALTER TABLE `lanzamiento` ADD `portadas` TINYINT(1) NOT NULL DEFAULT '1' AFTER `disponible`, ADD `disco_digitalizado` TINYINT(1) NOT NULL DEFAULT '1' AFTER `portadas`;
 
 ALTER TABLE `lanzamiento` ADD `nota_digitalizacion` text NOT NULL AFTER `disco_digitalizado`;
+
+ALTER TABLE `lanzamiento` ADD `lanzamiento` TINYINT(1) NOT NULL DEFAULT '1' AFTER `fecha_modificacion`; 

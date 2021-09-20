@@ -107,6 +107,7 @@ class Lanzamiento(models.Model):
     imagen_thumbnail = models.FileField(blank=True, null=True)
     fecha_creacion = models.DateTimeField(blank=True, null=True)
     fecha_modificacion = models.DateTimeField(blank=True, null=True)
+    lanzamiento = models.BooleanField()
     visible = models.BooleanField()
     disponible = models.BooleanField()
     portadas = models.BooleanField()
