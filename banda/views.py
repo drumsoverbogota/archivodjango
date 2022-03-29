@@ -21,6 +21,7 @@ from archivo.models import resize
 from archivo.models import Banda
 from archivo.models import Lanzamiento
 from archivodjango.settings import MEDIA_ROOT
+from archivodjango.settings import ENTRADA_BLOG
 
 from .forms import BandaForm
 
@@ -73,6 +74,7 @@ class BandaDetailView(TemplateView):
                     nodisponible = True
 
             context['nodisponible'] = nodisponible
+            context['blog'] = ENTRADA_BLOG
 
             return context
         except Exception as e:
