@@ -18,4 +18,5 @@ urlpatterns = [
     path('contact', views.ContactView.as_view(), name='contact'),
     path('buscar', views.BuscarView.as_view(), name='buscar'),
     path('lista', views.ListaView.as_view(), name='lista'),
+    path('faltantes', views.FaltantesView.as_view(), name='faltantes'),
 ]

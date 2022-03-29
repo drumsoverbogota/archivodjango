@@ -53,15 +53,31 @@ Pagina con información de la banda {{ banda.nombre }}
 <hr>
 <h4>Lanzamientos</h4>
 <ul>
-
-{% for lanzamiento in banda.lanzamientos.all%}
+{% for lanzamiento in lanzamiento %}
 	<li>
 		<a href="{% url 'lanzamiento:detail' lanzamiento.nombrecorto %}">
 			{% if not lanzamiento.disponible %}
 				<b class="rojo">
 			{% endif %}
 			{{ lanzamiento.nombre }}
-			{{ lanzamiento.anho }}
+			({{ lanzamiento.anho }})
+			{% if not lanzamiento.disponible %}
+				*</b>
+			{% endif %}
+		</a>
+	</li>
+{% endfor%}
+</ul>
+<h4>Otras grabaciones</h4>
+<ul>
+{% for lanzamiento in grabaciones %}
+	<li>
+		<a href="{% url 'lanzamiento:detail' lanzamiento.nombrecorto %}">
+			{% if not lanzamiento.disponible %}
+				<b class="rojo">
+			{% endif %}
+			{{ lanzamiento.nombre }}
+			({{ lanzamiento.anho }})
 			{% if not lanzamiento.disponible %}
 				*</b>
 			{% endif %}

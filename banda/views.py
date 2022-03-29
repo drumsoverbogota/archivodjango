@@ -64,10 +64,12 @@ class BandaDetailView(TemplateView):
         try:
             banda_object = Banda.objects.get(nombrecorto=nombrecorto)
             context['banda'] = banda_object
+            context['lanzamiento'] = banda_object.lanzamientos.filter(lanzamiento=True)
+            context['grabaciones'] = banda_object.lanzamientos.filter(lanzamiento=False)
 
             nodisponible = False
-            for banda in banda_object.lanzamientos.all():
-                if not banda.disponible:
+            for lanzamiento in banda_object.lanzamientos.all():
+                if not lanzamiento.disponible:
                     nodisponible = True
 
             context['nodisponible'] = nodisponible
