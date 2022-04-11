@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+from email.policy import default
 from decouple import config
 from pathlib import Path
 
@@ -134,7 +135,7 @@ LOGIN_REDIRECT_URL = '/'
 MEDIA_ROOT = config('MEDIA_ROOT', cast=str)
 MEDIA_URL = '/media/'
 
-ENTRADA_BLOG = config('BLOG', cast=str)
+ENTRADA_BLOG = config('BLOG', cast=str, default="1")
 
 LOGGING = {
     'version': 1,

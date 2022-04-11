@@ -23,11 +23,11 @@ from . import settings
 
 urlpatterns = [
     path('', include('archivo.urls', namespace='archivo')),
-    path('', include('banda.urls', namespace='banda')),
-    path('', include('entrada.urls', namespace='entrada')),
-    path('', include('lanzamiento.urls', namespace='lanzamiento')),
     path('', include('login.urls', namespace='login')),
-    path('', include('publicacion.urls', namespace='publicacion')),
+    path('', include('lanzamiento.urls', namespace='lanzamiento')),
+    path('banda/', include('banda.urls', namespace='banda')),
+    path('entrada/', include('entrada.urls', namespace='entrada')),
+    path('publicacion/', include('publicacion.urls', namespace='publicacion')),
     path('admin/', admin.site.urls),
 ]
 
