@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'login.apps.LoginConfig',
     'lanzamiento.apps.LanzamientoConfig',
     'banda.apps.BandaConfig',
+    'conciertos.apps.ConciertosConfig',
     'fullurl',
 ]
 

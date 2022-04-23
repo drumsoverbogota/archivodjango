@@ -63,22 +63,34 @@ Buscar - El Muladar
 				</th>      
 			</tr>
 		{% endfor %}
-
+		</table>
 	{% endif %}
 	{% if publicaciones %}
-
+		<h3>
+		Publicaciones que cumplen el criterio
+		</h3>
+		<ul>
 		{% for publicacion in publicaciones %}
-			<h3>
-			Publicaciones que cumplen el criterio
-			</h3>		
-			<ul>
-				<li>
-					<a href="{% url 'publicacion:detail' publicacion.nombrecorto %}">{{ publicacion.nombre }} ({{ publicacion.fecha }})</a>
-				</li>
-			</ul>
+			<li>
+				<a href="{% url 'publicacion:detail' publicacion.nombrecorto %}">{{ publicacion.nombre }} ({{ publicacion.fecha }})</a>
+			</li>
 		{% endfor %}
-
+		</ul>
 	{% endif %}
+
+	{% if conciertos %}
+		<h3>
+		Grabaciones de conciertos que cumplen el criterio
+		</h3>	
+		<ul>
+		{% for concierto in conciertos %}
+				<li>
+					<a href="{% url 'conciertos:detail' concierto.nombrecorto %}">{{ concierto.nombre }} ({{ concierto.fecha_grabacion }})</a>
+				</li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+
 {% endif %}
 
 {% endblock %}

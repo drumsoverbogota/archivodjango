@@ -26,6 +26,7 @@ urlpatterns = [
     path('', include('login.urls', namespace='login')),
     path('', include('lanzamiento.urls', namespace='lanzamiento')),
     path('banda/', include('banda.urls', namespace='banda')),
+    path('conciertos/', include('conciertos.urls', namespace='conciertos')),
     path('entrada/', include('entrada.urls', namespace='entrada')),
     path('publicacion/', include('publicacion.urls', namespace='publicacion')),
     path('admin/', admin.site.urls),

@@ -214,3 +214,30 @@ ALTER TABLE `lanzamiento` ADD `portadas` TINYINT(1) NOT NULL DEFAULT '1' AFTER `
 ALTER TABLE `lanzamiento` ADD `nota_digitalizacion` text NOT NULL AFTER `disco_digitalizado`;
 
 ALTER TABLE `lanzamiento` ADD `lanzamiento` TINYINT(1) NOT NULL DEFAULT '1' AFTER `fecha_modificacion`; 
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `conciertos`
+--
+
+CREATE TABLE `conciertos` (
+  `id` int NOT NULL,
+  `nombre` text NOT NULL,
+  `nombrecorto` varchar(30) NOT NULL,
+  `fecha_grabacion` date,
+  `notas` text,
+  `link` text,
+  `imagen` text,
+  `imagen_thumbnail` text,
+  `fecha_creacion` datetime DEFAULT NULL,
+  `fecha_modificacion` datetime DEFAULT NULL,
+  `visible` tinyint NOT NULL DEFAULT '1'
+) ENGINE=MyISAM DEFAULT CHARSET=UTF8MB4;
+
+ALTER TABLE `conciertos`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nombrecorto` (`nombrecorto`);
+
+  ALTER TABLE `conciertos`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;

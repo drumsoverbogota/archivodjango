@@ -8,6 +8,7 @@ from django.views.generic import ListView
 from django.views.generic import TemplateView
 
 from entrada.models import Entrada
+from conciertos.models import Conciertos
 from archivo.models import Banda
 from archivo.models import Lanzamiento
 from archivo.models import Publicacion
@@ -16,6 +17,14 @@ class IndexView(ListView):
     template_name = 'archivo/index.html'
     context_object_name = 'ultimas_entradas_list'
     paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["actualizaciones"] = Lanzamiento.objects.filter(
+            disponible=True,
+            visible=True
+        ).order_by('-fecha_modificacion')[:5]
+        return context
 
     def get_queryset(self):
         return Entrada.objects.filter(tipo='noticia').order_by('-fecha')
@@ -94,9 +103,16 @@ class BuscarView(TemplateView):
             Q(indice_referencia__icontains=peticion) 
         )
 
+        conciertos = Conciertos.objects.filter(
+            Q(visible=True) &
+            Q(nombre__icontains=peticion) |
+            Q(notas__icontains=peticion)
+        )
+
         context["peticion"] = peticion
         context["bandas"] = bandas
         context["lanzamientos"] = lanzamientos
         context["publicaciones"] = publicaciones
+        context["conciertos"] = conciertos
         
         return context 

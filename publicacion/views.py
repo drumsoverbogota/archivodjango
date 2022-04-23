@@ -172,7 +172,11 @@ class PublicacionCreateView(LoginRequiredMixin, FormView):
 
         nueva_entrada = form.save(commit=False)
 
-        id_publicacion = Publicacion.objects.latest('id').id + 1
+        try:
+            id_publicacion = Publicacion.objects.latest('id').id + 1
+        except:
+            id_publicacion = 1
+        
         nombrecorto = generar_nombrecorto(nueva_entrada.nombre, Publicacion)
 
         nueva_entrada.id = id_publicacion
@@ -190,7 +194,7 @@ class PublicacionCreateView(LoginRequiredMixin, FormView):
             nombre, extension = os.path.splitext(str(imagen))
 
             extension = extension.lower()
-            filetype = extension
+            filetype = extension[1:]
             if filetype == 'jpg':
                 filetype = 'jpeg'
             

@@ -84,10 +84,9 @@ tr:nth-child(even) {
 .top-image {
     display: block;
     margin-left: auto;
-    margin-right: auto;					    						
-    /*width: 25%;*/
-    width: 20vw;
-    min-width: 218px;			
+    margin-right: auto;
+    width: 11vw;
+    min-width: 150px;			
 
 }		
 
