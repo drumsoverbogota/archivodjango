@@ -6,8 +6,10 @@ register = template.Library()
 def mostrar_bandas(banda):
     if len(banda) > 1:
         return 'V.A.'
-    else:
+    elif len(banda) == 1:
         return banda[0].nombre
+    else:
+        return 'NA'
     
 @register.filter
 def add_suffix(url):

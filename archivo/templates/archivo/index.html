@@ -4,6 +4,7 @@
 El Muladar
 {% endblock %}
 {% load static %}
+{% load archivo_filters %}
 {% block content %}
 
 <!-- begin page content -->
@@ -36,8 +37,8 @@ El Muladar
   {% if actualizaciones %}
   <ul>
     {% for lanzamiento in actualizaciones %}
-    <li>
-      <a href="{% url 'lanzamiento:detail' lanzamiento.nombrecorto %}">{{ lanzamiento.nombre }} ({{lanzamiento.fecha_modificacion | date:"SHORT_DATE_FORMAT"}})
+    <li>      
+      <a href="{% url 'lanzamiento:detail' lanzamiento.nombrecorto %}"><b>[{{ lanzamiento.bandas.all | mostrar_bandas }}] </b> {{ lanzamiento.nombre }} ({{lanzamiento.fecha_modificacion | date:"SHORT_DATE_FORMAT"}})
       </a>
     </li>
     {% endfor %}
