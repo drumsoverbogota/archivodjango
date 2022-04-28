@@ -24,7 +24,7 @@ Admin: <a href="{% url 'conciertos:create' %}">Crear nueva grabación</a>
 			{% for concierto in conciertos %}
 			{% if fecha != concierto.fecha_grabacion %}
 				{% update_variable concierto.fecha_grabacion as fecha %}
-				<b>{{fecha}}</b>			
+				<p><b><a href="?{% param_replace fecha=concierto.fecha_grabacion %}">{{fecha}}</a></b></p>
 			{% endif %}			
 			<li>
 				<a href="{% url 'conciertos:detail' concierto.nombrecorto %}">

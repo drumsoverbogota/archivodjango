@@ -47,6 +47,11 @@ class ConciertosIndexView(ListView):
         if not self.no_visibles:
             filtros['visible'] = True
 
+        fecha_grabacion = get_request("fecha", None)
+
+        if fecha_grabacion:
+            filtros['fecha_grabacion'] = fecha_grabacion
+
         return Conciertos.objects.filter(**filtros).order_by('-fecha_grabacion')
 
 

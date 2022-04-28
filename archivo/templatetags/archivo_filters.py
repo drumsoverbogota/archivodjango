@@ -10,7 +10,7 @@ def mostrar_bandas(banda):
         return banda[0].nombre
     else:
         return 'NA'
-    
+
 @register.filter
 def add_suffix(url):
     return url.replace(".", "_small.")
