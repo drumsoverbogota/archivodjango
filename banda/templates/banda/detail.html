@@ -27,7 +27,7 @@ Pagina con información de la banda {{ banda.nombre }}
 
 <p>
 {% if banda.imagen %}
-	<a href="{{ banda.imagen.url }}"><IMG class = 'view-na' SRC="{{ banda.imagen.url | add_suffix }}" ALIGN="RIGHT"></IMG></a>
+	<a href="{{ banda.imagen.url }}" target="_blank" rel="noreferrer noopener"><IMG class = 'view-na' SRC="{{ banda.imagen.url | add_suffix }}" ALIGN="RIGHT"></IMG></a>
 {% else %}
 	<img class = 'view-image' src="{% static 'archivo/placeholder.gif' %}" ALIGN="RIGHT">
 {% endif %}
@@ -90,7 +90,7 @@ Pagina con información de la banda {{ banda.nombre }}
 <p>
 <b>Notas</b>
 <pre>
-{{ banda.notas }}
+{{ banda.notas | safe}}
 </pre>
 </p>
 <hr>

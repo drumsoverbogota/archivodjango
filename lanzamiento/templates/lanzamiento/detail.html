@@ -32,7 +32,7 @@
 
 <p>
 {% if lanzamiento.imagen %}
-	<a href="{{ lanzamiento.imagen.url }}"><IMG class = 'view-na' SRC="{{ lanzamiento.imagen.url | add_suffix }}" ALIGN="RIGHT"></IMG></a>
+	<a href="{{ lanzamiento.imagen.url }}" target="_blank"><IMG class = 'view-na' SRC="{{ lanzamiento.imagen.url | add_suffix }}" ALIGN="RIGHT"></IMG></a>
 {% else %}
 	<img class = 'view-image' src="{% static 'archivo/placeholder.gif' %}" ALIGN="RIGHT">
 {% endif %}
@@ -58,7 +58,7 @@
 <hr>
 
 {{ lanzamiento.creditos | linebreaksbr  }}
-{{ lanzamiento.notas | linebreaksbr  }}
+{{ lanzamiento.notas | safe | linebreaksbr  }}
 
 {% if not lanzamiento.portadas %}
 	<p>
@@ -80,7 +80,7 @@
 <hr>
 
 {% if lanzamiento.link %}
-	<a href="{{lanzamiento.link}}">Link de descarga</a>
+	<a href="{{lanzamiento.link}}" target="_blank" rel="noreferrer noopener">Link de descarga</a>
 {% else %}
 	¡No hay link disponible para descarga! 
 {% endif%}
@@ -88,7 +88,7 @@
 <br>
 
 {% if lanzamiento.link_youtube %}
-	<a href="{{lanzamiento.link_youtube}}" target="_blank">Link a Youtube</a>
+	<a href="{{lanzamiento.link_youtube}}" target="_blank" rel="noreferrer noopener">Link a Youtube</a>
 {% endif%}
 <br>
 

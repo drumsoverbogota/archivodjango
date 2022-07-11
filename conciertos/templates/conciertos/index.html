@@ -28,7 +28,7 @@ Admin: <a href="{% url 'conciertos:create' %}">Crear nueva grabación</a>
 			{% endif %}			
 			<li>
 				<a href="{% url 'conciertos:detail' concierto.nombrecorto %}">
-					{{ concierto.nombre }} ({{ concierto.fecha_grabacion }})
+					{{ concierto.nombre }}
 				</a>
 			</li>
 			{% endfor %}

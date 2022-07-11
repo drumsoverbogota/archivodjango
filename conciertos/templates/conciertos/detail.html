@@ -35,7 +35,7 @@ Pagina con información de la grabacion del concierto "{{ concierto.nombre }}"
 
 <p>
 	{% if concierto.imagen %}
-	<a href="{{ concierto.imagen.url }}"><IMG class='view-na' SRC="{{ concierto.imagen_thumbnail.url }}"></IMG></a>
+	<a href="{{ concierto.imagen.url }}" target="_blank" rel="noreferrer noopener"><IMG class='view-na' SRC="{{ concierto.imagen_thumbnail.url }}"></IMG></a>
 	{% else %}
 	<img class='view-na' src="{% static 'archivo/placeholder.gif' %}">
 	{% endif %}
@@ -50,7 +50,7 @@ Pagina con información de la grabacion del concierto "{{ concierto.nombre }}"
 <hr>
 
 {% if concierto.link %}
-<a href="{{concierto.link}}">Link de descarga</a>
+<a href="{{concierto.link}}" target="_blank" rel="noreferrer noopener">Link de descarga</a>
 {% else %}
 ¡No hay link disponible!
 {% endif %}
