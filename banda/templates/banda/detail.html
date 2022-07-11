@@ -85,13 +85,11 @@ Pagina con información de la banda {{ banda.nombre }}
 	</li>
 {% endfor%}
 </ul>
-{{ banda.comentarios }}
 <hr>
+
+<b>Comentarios</b>
 <p>
-<b>Notas</b>
-<pre>
-{{ banda.notas | safe}}
-</pre>
+{{ banda.comentarios | safe | linebreaksbr}}
 </p>
 <hr>
 {% if nodisponible %}
