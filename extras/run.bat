@@ -1,0 +1,1 @@
+cmd /k "C:\Users\Sergio\Envs\pyqt\Scripts\activate.bat & python pun.py & exit"

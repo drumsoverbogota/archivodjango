@@ -17,7 +17,7 @@ from django.views.generic.base import TemplateView
 from django.urls import reverse
 
 from archivo.models import generar_nombrecorto
-from archivo.models import resize
+from utils.image_utilities import resize
 from archivo.models import Banda
 from archivo.models import Lanzamiento
 from archivodjango.settings import MEDIA_ROOT

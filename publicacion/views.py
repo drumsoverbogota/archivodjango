@@ -17,7 +17,7 @@ from django.shortcuts import render
 # Create your views here.
 
 from archivo.models import generar_nombrecorto
-from archivo.models import resize
+from utils.image_utilities import resize
 from archivo.models import Publicacion
 from archivodjango.settings import MEDIA_ROOT
 from .forms import PublicacionForm

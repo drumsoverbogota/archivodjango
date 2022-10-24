@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from archivo.models import generar_nombrecorto
-from archivo.models import resize
+from utils.image_utilities import resize
 from archivodjango.settings import MEDIA_ROOT
 
 from conciertos.models import Conciertos

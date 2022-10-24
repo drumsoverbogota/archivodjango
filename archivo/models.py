@@ -18,6 +18,8 @@ import os
 import re
 import sys
 
+from utils.image_utilities import resize
+
 logger = logging.getLogger(__name__)
 
 lista_formatos = ['CD', 'Digipack','12"','10"','7"','Flexi','Cassette','Digital','Mini CD','DVD','Otros','Bootleg']
@@ -25,17 +27,11 @@ lista_formatos = ['CD', 'Digipack','12"','10"','7"','Flexi','Cassette','Digital'
 FORMATOS = (
     list(
         zip(
-            [str(x) for x in range(1,len(lista_formatos)+1)],
+            [str(x) for x in range(1,len(lista_formatos)+1)],   
             lista_formatos
         )
     )
 )
-
-def resize(max_width, width, height):
-    wpercent = (max_width/float(width))
-    hsize = int((float(height)*float(wpercent)))
-    return (max_width, hsize)
-
 
 def generar_nombrecorto(nombre, model):
 
@@ -105,10 +101,10 @@ class Lanzamiento(models.Model):
     indice_referencia = models.TextField(blank=True, null=True)
     imagen = models.FileField(blank=True, null=True)
     imagen_thumbnail = models.FileField(blank=True, null=True)
-    fecha_creacion = models.DateTimeField(blank=True, null=True)
-    fecha_modificacion = models.DateTimeField(blank=True, null=True)
+    fecha_creacion = models.DateTimeField(blank=True, null=True, auto_now_add=True)
+    fecha_modificacion = models.DateTimeField(blank=True, null=True, auto_now_add=True)
     lanzamiento = models.BooleanField()
-    visible = models.BooleanField()
+    visible = models.BooleanField(default=True)
     disponible = models.BooleanField()
     portadas = models.BooleanField()
     disco_digitalizado = models.BooleanField()

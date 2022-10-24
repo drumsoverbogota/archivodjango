@@ -15,6 +15,8 @@ from decouple import config
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -29,6 +31,19 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default="127.0.0.1", cast=lambda v: [s.strip() for s in v.split(',')])
 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]    
+}
 
 # Application definition
 
@@ -46,6 +61,8 @@ INSTALLED_APPS = [
     'lanzamiento.apps.LanzamientoConfig',
     'banda.apps.BandaConfig',
     'conciertos.apps.ConciertosConfig',
+    'rest_framework',
+    'apis',
     'fullurl',
 ]
 
@@ -115,7 +132,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'es-co'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/Bogota'
 
