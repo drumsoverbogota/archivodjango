@@ -1,3 +1,6 @@
+from importlib.metadata import metadata
+from pathlib import Path
+import re
 import zipfile
 from pun_utils import ConciertoUpload
 from pun_utils import LanzamientoUpload
@@ -86,6 +89,7 @@ settings_dict = {
     "timeout_time": ("Timeout time", 3),
     "default_location": ("Default Location", "H:\RIPS\Archivo Punk"),
     "time_offset": ("Time Offset", 0.25),
+    "check_test_item": ("Test items", 0)
 }
 
 class QueueModel(QAbstractListModel):
@@ -151,9 +155,10 @@ class Application(QWidget):
     for key in settings_dict:
         if not settings.contains(key):
             setting = settings_dict[key]
-            settings.value(key, setting[1], type=str)
-    
-
+            settings.setValue(key, setting[1])
+            
+    settings.sync()
+    """
     upload_concert_queue.queue.append(
         [
             'w',
@@ -175,8 +180,8 @@ class Application(QWidget):
         [
             'w',
             {
-                'nombre': '1', 
-                'banda': "Asco", 
+                'nombre': 'Uñas Púnk Siempre lokás', 
+                'banda': "Asco, ZD, Ira, lOS sUZIOX", 
                 'referencia': '2', 
                 'formato': 3, 
                 'anho': '4', 
@@ -184,14 +189,14 @@ class Application(QWidget):
                 'creditos': '7+8\t\n8', 
                 'indice_referencia': '9', 
                 'nota_digitalizacion': '10', 
-                'imagen': '/home/sergio/Pictures/bobbyh.jpeg', 
+                'imagen': 'zipfile:Treno.1.jpg', 
                 'file': '/home/sergio/Documents/ELMA0001NumenNaif.zip',
                 'notas_internet_archive': 'Punk band Numen Naif\nFrom Bogota Colomiba',
                 'topics': "Punk, colombia",
             }
         ]
     )
-
+    """
     upload_concert_form = {}
     upload_lanzamiento_form = {}
     settings_form = {}
@@ -232,7 +237,8 @@ class Application(QWidget):
         self.path = self.settings.value("default_location")
         self.time_offset = 0.25
         self.song_metadata = []
-        self.supported_extensions = [".mp3", ".flac"]
+        self.supported_extensions_audio = [".mp3", ".flac"]
+        self.supported_extensions_images = (".jpg", ".jpeg", ".png")
 
         #Signal Mappers
         self.signal_mapper_image.mapped[int].connect(self.image_button)
@@ -521,12 +527,16 @@ class Application(QWidget):
     def settings_tab(self):
         layout = QFormLayout()
 
+
         for key in settings_dict:
             label = settings_dict.get(key)[0]
             setting = str(self.settings.value(key))
-            
-            self.settings_form[key]  = QLineEdit()
-            self.settings_form[key].setText(setting)
+            if key.startswith("check"):
+                self.settings_form[key]  = QCheckBox()
+                self.settings_form[key].setChecked(True if setting == "1" else False)
+            else:
+                self.settings_form[key]  = QLineEdit()
+                self.settings_form[key].setText(setting)
 
             if key.startswith("password"):            
                 self.settings_form[key].setEchoMode(QLineEdit.Password)
@@ -555,38 +565,111 @@ class Application(QWidget):
             if index == 1:
                 self.open_image_label_lanzamiento.setText(path)
 
+    def read_file_metadata(self, file_to_read):
+        metadata = {}
+        
+        concierto = os.path.basename(os.path.dirname(file_to_read))
+        directorio = os.path.dirname(file_to_read)
+        banda = Path(file_to_read).stem
+
+        for files_directorio in os.listdir(directorio):
+            if files_directorio.endswith(self.supported_extensions_images):
+                metadata["imagen"] = os.path.join(directorio, files_directorio)
+                break
+
+
+        nombre_banda = ""
+
+        regex_banda = r"^[0-9]*\s-?\s?([\w\d, ]*)$"
+        regex_concierto = r"^(\d*)-(\d*)-(\d*)\s([\w\d, ]*)$"
+        matches_banda = re.finditer(regex_banda, banda, re.MULTILINE)
+        matches_concierto = re.finditer(regex_concierto, concierto, re.MULTILINE)
+        for match in matches_banda:
+            nombre_banda = match.group(1)
+            metadata["artista"] = nombre_banda
+        for match in matches_concierto:
+            anho = int(match.group(1))
+            mes = int(match.group(2))
+            dia = int(match.group(3))
+            nombre_concierto = match.group(4)
+            metadata["fecha"] = QDate(anho, mes, dia)
+            metadata["nombre"] = f"{nombre_banda} - {nombre_concierto}"
+            metadata["notas_archivo"] = f'Grabación de la banda "{nombre_banda}" en el concierto "{nombre_concierto}"\nGrabado en Bogotá'
+            metadata["notas_internet_archive"] = f'Live recording of Punk band "{nombre_banda}" on "{nombre_concierto}".\nRecorded in Bogotá, Colombia.'
+        return metadata
+
+
     def read_zip_file(self, file_to_open):
         
         #Store the song metadata in case is still being used in the first tab
         temp_song_metadata = self.song_metadata
 
-        tracklist = ""
-        artistas = set()
+        artist_set = set()
+        album_set = set()
+        date_set = set()
+
+        metadata = {}
 
         is_zip = zipfile.is_zipfile(file_to_open)
-        
         if is_zip:
             with zipfile.ZipFile(file_to_open, 'r') as zip:
+                
+                filename = os.path.basename(file_to_open)
+                #If file name begins with ELMA we know that the files are following
+                #the reference of ELMAXXXX where XXXX is a number from 0000 to 9999
+                if filename.startswith("ELMA"):
+                    metadata["indice_referencia"] = filename[:8]
+
                 self.append_terminal('Extracting all the files now...')
                 zip.extractall(path=f'{dname}/tmp')
                 files_ia = [f"{dname}/tmp/{file}" for file in zip.namelist() if not file.endswith("/")]
                 if files_ia:
+                    
+                    #Get the first image
+                    images = []
+                    for files_in_zip in files_ia:
+                        if files_in_zip.endswith(self.supported_extensions_images):
+                            images.append(files_in_zip)
+                    
+                    if images:
+                        images.sort()
+                        metadata["imagen"] = f"zipfile:{os.path.basename(images[0])}"
+
                     path = os.path.dirname(files_ia[0])
                     self.load_songs(path)
 
                     for song in self.song_metadata:
-                        artistas.add(song.tags.artist[0])
+
+                        artist = song.get("tags", {}).get("artist", [None])[0]
+                        album = song.get("tags", {}).get("album", [None])[0]
+                        year = song.get("tags", {}).get("date", [None])[0]
+
+                        if artist:
+                            artist_set.add(artist)
+                        if album:
+                            album_set.add(album)
+                        if year:
+                            date_set.add(year) 
                     
                     #If there are more than one artist we add the name to the tracklist
-                    tracklist = self.create_list(artist_name=len(artistas)>1)
+                    metadata["tracklist"] = self.create_list(artist_name=len(artist_set)>1)
+                    metadata["banda"] = ', '.join(artist_set)
+                    
+                    if len(album_set) == 1:
+                        album, = album_set
+                        metadata["nombre"] = album
+
+                    if len(date_set) == 1:
+                        anho, = date_set
+                        metadata["anho"] = anho
+
 
                 self.append_terminal('Deleting temporary extracted files...')
                 shutil.rmtree(path=f'{dname}/tmp')
                 self.append_terminal('Files deleted!')
 
         self.song_metadata = temp_song_metadata
-
-        return tracklist, ', '.join(artistas)
+        return metadata
 
     def file_button(self,index):
         path = ""
@@ -600,11 +683,23 @@ class Application(QWidget):
             path = dialog.selectedFiles()[0]
             if index == 0:
                 self.open_file_label.setText(path)
+                metadata = self.read_file_metadata(path)
+                for field in metadata:
+                    if field == 'imagen':
+                        self.open_image_label.setText(metadata.get(field))
+                    if field == 'fecha':
+                        self.upload_concert_form[field].setDate(metadata.get(field))                        
+                    else:
+                        self.upload_concert_form[field].setText(metadata.get(field))                
             if index == 1:
                 self.open_file_label_lanzamiento.setText(path) 
-                tracklist, artistas = self.read_zip_file(path)
-                self.upload_lanzamiento_form["tracklist"].setText(tracklist)
-                self.upload_lanzamiento_form["banda"].setText(artistas)
+                metadata = self.read_zip_file(path)
+                for field in metadata:
+                    if field == 'imagen':
+                        self.open_image_label_lanzamiento.setText(metadata.get(field))
+                    else:
+                        self.upload_lanzamiento_form[field].setText(metadata.get(field))
+
 
     def add_to_queue(self, index):
         
@@ -796,7 +891,11 @@ class Application(QWidget):
 
     def update_settings(self):
         for key in settings_dict:
-            self.settings.setValue(key, self.settings_form[key].text())
+            if key.startswith("check"):
+                value_to_set = 1 if self.settings_form[key].isChecked() else 0
+                self.settings.setValue(key, value_to_set)
+            else:
+                self.settings.setValue(key, self.settings_form[key].text())
         self.settings.sync()
 
         self.path = self.settings.value("default_location")
@@ -841,8 +940,6 @@ class Application(QWidget):
             if show_time:
                 track += f"{total_minutes}:{total_seconds}"
 
-            #track = f"{tracknumber}. {artist} - {title} {total_minutes}:{total_seconds}\n"
-
             track = track.strip() + "\n"
 
             song_list += track
@@ -859,7 +956,7 @@ class Application(QWidget):
         try:
             for filename in os.listdir(path):
                 _, extension = os.path.splitext(filename)
-                if extension in self.supported_extensions:
+                if extension in self.supported_extensions_audio:
                     try:
                         metadata = audio_metadata.load(f"{path}/{filename}")
                         

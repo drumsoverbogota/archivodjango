@@ -4,7 +4,7 @@ from rest_framework import renderers
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser
-from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import FormParser
 
 from django.db.models import Q
 
@@ -35,7 +35,7 @@ class ConciertosViewSet(viewsets.ModelViewSet):
 class LanzamientosViewSet(viewsets.ModelViewSet):
 	
 	permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-	parser_classes = [MultiPartParser]
+	parser_classes = [MultiPartParser, FormParser]
 	
 	# define queryset
 	queryset = Lanzamiento.objects.all()
@@ -43,15 +43,16 @@ class LanzamientosViewSet(viewsets.ModelViewSet):
 	# specify serializer to be used
 	serializer_class = LanzamientosSerializer
 
-	#renderer_classes = [JSONRenderer]
 	@action(detail=True, methods=['post'])
 	def asignar(self, request, *args, **kwargs):
 
 		bandas = request.data.get("bandas")
+
 		id_lanzamiento = kwargs.get("pk")
 		ids_asignar = []
 		nombres_bandas_encontradas = []
 		nombres_bandas_no_encontradas = []
+		
 		if bandas and id_lanzamiento:
 			bandas = [ _.strip() for _ in bandas.split(",")]
 
