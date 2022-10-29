@@ -559,7 +559,8 @@ class Application(QWidget):
         dialog.setDirectory(self.path)
 
         if dialog.exec_() == QDialog.Accepted:
-            path = dialog.selectedFiles()[0]
+            self.path = os.path.dirname(path)
+            self.path = path
             if index == 0:
                 self.open_image_label.setText(path)
             if index == 1:
@@ -681,6 +682,7 @@ class Application(QWidget):
 
         if dialog.exec_() == QDialog.Accepted:
             path = dialog.selectedFiles()[0]
+            self.path = os.path.dirname(path)
             if index == 0:
                 self.open_file_label.setText(path)
                 metadata = self.read_file_metadata(path)
@@ -892,7 +894,7 @@ class Application(QWidget):
     def update_settings(self):
         for key in settings_dict:
             if key.startswith("check"):
-                value_to_set = 1 if self.settings_form[key].isChecked() else 0
+                value_to_set = "1" if self.settings_form[key].isChecked() else "0"
                 self.settings.setValue(key, value_to_set)
             else:
                 self.settings.setValue(key, self.settings_form[key].text())

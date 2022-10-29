@@ -87,7 +87,6 @@ def conciertos_upload(event, terminal):
 
     if settings.value("check_test_item") == "1":
         identifier = f"test-{identifier}"
-
         metadata_ia["collection"] = "test_collection"
         metadata_ia["identifier"] = identifier
     else:
