@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% load archivo_filters %}
+
+{% block title %}
+Conciertos - El Muladar
+{% endblock %}
+
+{% block ogtitle %}
+Conciertos - El Muladar
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+Admin: <a href="{% url 'conciertos:create' %}">Crear nueva grabación</a>
+{% endif %}
+
+<h2>Lista de Grabaciones de conciertos</h2>
+
+<ul>
+	{% if conciertos %}
+		{% with '' as fecha %}
+			{% for concierto in conciertos %}
+			{% if fecha != concierto.fecha_grabacion %}
+				{% update_variable concierto.fecha_grabacion as fecha %}
+				<p><b><a href="?{% param_replace fecha=concierto.fecha_grabacion %}">{{fecha}}</a></b></p>
+			{% endif %}			
+			<li>
+				<a href="{% url 'conciertos:detail' concierto.nombrecorto %}">
+					{{ concierto.nombre }}
+				</a>
+			</li>
+			{% endfor %}
+		{% endwith %}
+	{% endif %}
+</ul>
+
+</table>
+
+{% endblock %}

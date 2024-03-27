@@ -5,7 +5,7 @@
 {% block title %}
 {{ publicacion.nombre }} - El Muladar
 {% endblock %}
-{% load publicacion_filters %}
+{% load archivo_filters %}
 {% load static %}
 
 {% block ogtitle %}
@@ -33,7 +33,7 @@ Pagina con información de la publicacion "{{ publicacion.nombre }}"
 
 <p>
 {% if publicacion.imagen %}
-	<a href="{{ publicacion.imagen.url }}"><IMG class = 'view-na' SRC="{{ publicacion.imagen.url | add_suffix }}"></IMG></a>
+	<a href="{{ publicacion.imagen.url }}" target="_blank" rel="noreferrer noopener"><IMG class = 'view-na' SRC="{{ publicacion.imagen.url | add_suffix }}"></IMG></a>
 {% else %}
 	<img class = 'view-na' src="{% static 'archivo/placeholder.gif' %}">
 {% endif %}
@@ -48,7 +48,7 @@ Pagina con información de la publicacion "{{ publicacion.nombre }}"
 <hr>
 
 {% if publicacion.link %}
-	<a href="{{publicacion.link}}">Link de descarga</a>
+	<a href="{{publicacion.link}}" target="_blank" rel="noreferrer noopener">Link de descarga</a>
 {% else %}
 	¡No hay link disponible!
 {% endif %}

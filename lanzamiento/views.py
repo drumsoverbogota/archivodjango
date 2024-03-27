@@ -19,7 +19,7 @@ from django.views.generic.base import TemplateView
 from django.urls import reverse
 
 from archivo.models import generar_nombrecorto
-from archivo.models import resize
+from utils.image_utilities import resize
 from archivo.models import Banda
 from archivo.models import BandaLanzamiento
 from archivo.models import Lanzamiento
@@ -215,6 +215,7 @@ class LanzamientoEditView(LoginRequiredMixin, UpdateView):
                 if post_request('imagen-clear') == 'on':
                     old_entrada.imagen.delete(False)
                     old_entrada.imagen_thumbnail.delete(False)
+
         except Exception as e:
             logger.error("Error subiendo los archivos!" + str(e))
 
@@ -234,7 +235,11 @@ class LanzamientoCreateView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
 
         nueva_entrada = form.save(commit=False)
-        id_lanzamiento = Lanzamiento.objects.latest('id').id + 1
+        try:
+            id_lanzamiento = Lanzamiento.objects.latest('id').id + 1
+        except:
+            id_lanzamiento = 1
+        
         nombrecorto = generar_nombrecorto(nueva_entrada.nombre, Lanzamiento)
 
         nueva_entrada.id = id_lanzamiento

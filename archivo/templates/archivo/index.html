@@ -3,48 +3,77 @@
 {% block title %}
 El Muladar
 {% endblock %}
-
+{% load static %}
+{% load archivo_filters %}
 {% block content %}
 
 <!-- begin page content -->
 <div class="center-justified">
-Buscar en el archivo
-<form action="{% url 'archivo:buscar' %}" method="GET">
-    <input type="input" name="peticion" value ="{{ peticion }}"/><br />
+  Buscar en el archivo
+  <form action="{% url 'archivo:buscar' %}" method="GET">
+    <input type="input" name="peticion" value="{{ peticion }}" /><br />
     <input type="submit" value="Buscar" />
-</form>    
+  </form>
 
-<p><h2>¡Bienvenidos a El Muladar!</h2></p>
+  <p>
+  <h2>¡Bienvenidos a El Muladar!</h2>
+  </p>
 
-<p>El Muladar es un archivo de Punk Colombiano. Pueden ver todos los discos disponibles para descarga acá en <a href="{% url 'lanzamiento:index' %}">Lanzamientos Disponibles</a>, las bandas acá en <a href="{% url 'banda:index' %}">Bandas</a> y los fanzines acá en <a href="{% url 'publicacion:index' %}">Publicaciones</a>.</p>
-<p>
-También empezamos a agregar los discos que aún no tenemos disponibles acá en <a href="{% url 'lanzamiento:index' %}?no_disponibles=true"> Todos los lanzamientos</a>. Ahí están los discos que sabemos que existen pero no tenemos acceso el disco en físico para digitalizarlo. </p>
+  <p>El Muladar es un archivo de Punk Colombiano. Pueden ver todos los discos disponibles para descarga acá en <a
+      href="{% url 'lanzamiento:index' %}">Lanzamientos Disponibles</a>, las bandas acá en <a
+      href="{% url 'banda:index' %}">Bandas</a> y los fanzines acá en <a
+      href="{% url 'publicacion:index' %}">Publicaciones</a>.</p>
+  <p>
+    También empezamos a agregar los discos que aún no tenemos disponibles acá en <a
+      href="{% url 'lanzamiento:index' %}?no_disponibles=true"> Todos los lanzamientos</a>. Ahí están los discos que
+    sabemos que existen pero no tenemos acceso el disco en físico para digitalizarlo. </p>
 
-<hr/>
+  <hr />
 
-<p><h2>Noticias</h2></p>
+  <p>
+  <h2><img src="{% static "archivo/new.gif" %}">Ultimas modificaciones</h2>
+  </p>
 
-{% if user.is_authenticated %}
-	Admin: <a href="{% url 'entrada:create' %}">Crear nueva entrada</a>
-{% endif %}
-
-{% if ultimas_entradas_list %}
-    {% for noticia in ultimas_entradas_list %}
-        <h3>{{ noticia.titulo }} ({{ noticia.fecha }})</h3>
-        {{ noticia.contenido | safe}}
-		{% if user.is_authenticated %}
-			<div align="right"><h5>
-				<a href="{% url 'entrada:edit' noticia.id %}">Editar</a>|
-				<a href="{% url 'entrada:delete' noticia.id %}">Borrar</a></h5>
-			</div>
-		{% endif %}
+  {% if actualizaciones %}
+  <ul>
+    {% for lanzamiento in actualizaciones %}
+    <li>      
+      <a href="{% url 'lanzamiento:detail' lanzamiento.nombrecorto %}"><b>[{{ lanzamiento.bandas.all | mostrar_bandas }}] </b> {{ lanzamiento.nombre }} ({{lanzamiento.fecha_modificacion | date:"SHORT_DATE_FORMAT"}})
+      </a>
+    </li>
     {% endfor %}
-{% endif %}
+  </ul>
+  {% endif %}
+
+  <hr />
+
+  <p>
+  <h2>Noticias</h2>
+  </p>
+
+  {% if user.is_authenticated %}
+  Admin: <a href="{% url 'entrada:create' %}">Crear nueva entrada</a>
+  {% endif %}
+
+  {% if ultimas_entradas_list %}
+  {% for noticia in ultimas_entradas_list %}
+  <h3>{{ noticia.titulo }} ({{ noticia.fecha }})</h3>
+  {{ noticia.contenido | safe}}
+  {% if user.is_authenticated %}
+  <div align="right">
+    <h5>
+      <a href="{% url 'entrada:edit' noticia.id %}">Editar</a>|
+      <a href="{% url 'entrada:delete' noticia.id %}">Borrar</a>
+    </h5>
+  </div>
+  {% endif %}
+  {% endfor %}
+  {% endif %}
 
 </div>
 
 <div align="center">
-Página
+  Página
   {% if page_obj.has_previous %}
   <a href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
   {% else %}
@@ -60,7 +89,7 @@ Página
   {% if page_obj.has_next %}
   <a href="?page={{ page_obj.next_page_number }}">&raquo;</a>
   {% endif %}
-  
+
 </div>
 
 

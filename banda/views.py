@@ -17,7 +17,7 @@ from django.views.generic.base import TemplateView
 from django.urls import reverse
 
 from archivo.models import generar_nombrecorto
-from archivo.models import resize
+from utils.image_utilities import resize
 from archivo.models import Banda
 from archivo.models import Lanzamiento
 from archivodjango.settings import MEDIA_ROOT
@@ -141,8 +141,8 @@ class BandaEditView(LoginRequiredMixin, UpdateView):
                 if filetype == 'jpg':
                     filetype = 'jpeg'
                 
-                ruta_thumbnail = str(id_banda) + nombrecorto + 'image_small' + extension
                 ruta = str(id_banda) + nombrecorto + 'image' + extension
+                ruta_thumbnail = str(id_banda) + nombrecorto + 'image_small' + extension
 
                 logger.debug("La ruta de la imagen es " + str(ruta))
                 logger.debug("La ruta del thumbnail es " + str(ruta_thumbnail))
@@ -198,8 +198,10 @@ class BandaCreateView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
 
         nueva_entrada = form.save(commit=False)
-
-        id_banda = Banda.objects.latest('id').id + 1
+        try:
+            id_banda = Banda.objects.latest('id').id + 1
+        except:
+            id_banda = 1
         nombrecorto = generar_nombrecorto(nueva_entrada.nombre, Banda)
 
         nueva_entrada.id = id_banda

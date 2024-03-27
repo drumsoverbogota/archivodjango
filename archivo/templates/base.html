@@ -11,7 +11,8 @@
 	<meta property="og:description" content="{% block description %}El Muladar es un archivo de Punk Colombiano de libre acceso.{% endblock %}" />
     <meta property="og:image" content="{% block imagen %}{% fullstatic 'archivo/logo.png' %}{% endblock %}" />
 	<meta property="og:type" content="website"/>
-	
+    {% block meta %}
+    {% endblock %}
 </head>
 <body>
 
@@ -38,6 +39,7 @@
               {% endcomment %}
               <li><a href="{% url 'banda:index' %}">Bandas</a></li>
               <li><a href="{% url 'publicacion:index' %}">Fanzines y otras publicaciones</a></li>
+              <li><a href="{% url 'conciertos:index' %}">Conciertos</a><img src="{% static "archivo/new2.gif" %}"></li>
               <li><a href="{% url 'archivo:buscar' %}">Buscar en el archivo</a></li>
               <li><a href="{% url 'archivo:faltantes' %}">Faltantes</a></li>
         </ul>

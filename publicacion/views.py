@@ -17,7 +17,7 @@ from django.shortcuts import render
 # Create your views here.
 
 from archivo.models import generar_nombrecorto
-from archivo.models import resize
+from utils.image_utilities import resize
 from archivo.models import Publicacion
 from archivodjango.settings import MEDIA_ROOT
 from .forms import PublicacionForm
@@ -172,7 +172,11 @@ class PublicacionCreateView(LoginRequiredMixin, FormView):
 
         nueva_entrada = form.save(commit=False)
 
-        id_publicacion = Publicacion.objects.latest('id').id + 1
+        try:
+            id_publicacion = Publicacion.objects.latest('id').id + 1
+        except:
+            id_publicacion = 1
+        
         nombrecorto = generar_nombrecorto(nueva_entrada.nombre, Publicacion)
 
         nueva_entrada.id = id_publicacion
@@ -190,7 +194,7 @@ class PublicacionCreateView(LoginRequiredMixin, FormView):
             nombre, extension = os.path.splitext(str(imagen))
 
             extension = extension.lower()
-            filetype = extension
+            filetype = extension[1:]
             if filetype == 'jpg':
                 filetype = 'jpeg'
             

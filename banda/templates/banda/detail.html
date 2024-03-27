@@ -2,7 +2,7 @@
 
 {% load static %}
 {% load fullurl %}
-{% load banda_filters %}
+{% load archivo_filters %}
 {% block title %}
 {{ banda.nombre }} - El Muladar
 {% endblock %}
@@ -27,7 +27,7 @@ Pagina con información de la banda {{ banda.nombre }}
 
 <p>
 {% if banda.imagen %}
-	<a href="{{ banda.imagen.url }}"><IMG class = 'view-na' SRC="{{ banda.imagen.url | add_suffix }}" ALIGN="RIGHT"></IMG></a>
+	<a href="{{ banda.imagen.url }}" target="_blank" rel="noreferrer noopener"><IMG class = 'view-na' SRC="{{ banda.imagen.url | add_suffix }}" ALIGN="RIGHT"></IMG></a>
 {% else %}
 	<img class = 'view-image' src="{% static 'archivo/placeholder.gif' %}" ALIGN="RIGHT">
 {% endif %}
@@ -85,13 +85,11 @@ Pagina con información de la banda {{ banda.nombre }}
 	</li>
 {% endfor%}
 </ul>
-{{ banda.comentarios }}
 <hr>
+
+<b>Comentarios</b>
 <p>
-<b>Notas</b>
-<pre>
-{{ banda.notas }}
-</pre>
+{{ banda.comentarios | safe | linebreaksbr}}
 </p>
 <hr>
 {% if nodisponible %}

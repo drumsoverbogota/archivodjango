@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load fullurl %}
+{% load archivo_filters %}
+{% block title %}
+{{ concierto.nombre }} - El Muladar
+{% endblock %}
+
+{% block ogtitle %}
+{{ concierto.nombre }} - El Muladar
+{% endblock %}
+
+{% block description %}
+Pagina con información de la grabacion del concierto "{{ concierto.nombre }}"
+{% endblock %}
+
+{% block imagen %}
+{% if concierto.imagen %}
+{% buildfullurl concierto.imagen.url %}
+{% else %}
+{% fullstatic "archivo/logo.png" %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<p>
+<h1>
+	{{ concierto.nombre }}
+	{% if concierto.fecha_grabacion %}
+	({{ concierto.fecha_grabacion }})
+	{% endif %}
+</h1>
+<p>
+
+<p>
+	{% if concierto.imagen %}
+	<a href="{{ concierto.imagen.url }}" target="_blank" rel="noreferrer noopener"><IMG class='view-na' SRC="{{ concierto.imagen_thumbnail.url }}"></IMG></a>
+	{% else %}
+	<img class='view-na' src="{% static 'archivo/placeholder.gif' %}">
+	{% endif %}
+</p>
+
+{% if concierto.notas %}
+<h3>Notas</h3>
+{{ concierto.notas | linebreaksbr }}
+{% endif %}
+
+
+<hr>
+
+{% if concierto.link %}
+<a href="{{concierto.link}}" target="_blank" rel="noreferrer noopener">Link de descarga</a>
+{% else %}
+¡No hay link disponible!
+{% endif %}
+
+<br>
+
+{% if user.is_authenticated %}
+<div align="right">
+	<h5>
+		<a href="{% url 'conciertos:edit' concierto.nombrecorto %}">Editar</a>|
+		<a href="{% url 'conciertos:delete' concierto.nombrecorto %}">Borrar</a>
+	</h5>
+</div>
+{% endif %}
+
+{% endblock %}

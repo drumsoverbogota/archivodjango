@@ -1,0 +1,4 @@
+PyQt5
+audio-metadata
+requests
+internetarchive

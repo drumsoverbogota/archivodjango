@@ -1,6 +1,7 @@
 #Cambia el nombre de este archivo a settings.ini
 [settings]
 DEBUG=False
+#Este tiene que terminar con / o cosas raras suceden
 MEDIA_ROOT=
 ALLOWED_HOSTS=
 SECRET_KEY=
