@@ -167,21 +167,32 @@ LOGGING = {
             'format': '{levelname}: {message}',
             'style': '{',
         },
-    },    
+    },
+    
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
-        'file': {
-            'level': config('LOG_LEVEL', cast=str),
-            'class': 'logging.FileHandler',
-            'filename': config('LOG_FILE', cast=str),
-            'formatter': 'verbose',
-        },
     },
     'root': {
-        'handlers': ['console', 'file'],
-        'level': config('LOG_LEVEL', cast=str),
+        'handlers': ['console'],
+        'level': config('LOG_LEVEL', default='INFO', cast=str),
+    },
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
     },
 }
