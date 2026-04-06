@@ -8,7 +8,7 @@ archivodjango/settings.ini
 archivodjango/mysql.cnf
 archivo/migrations/*
 !archivo/migrations/__init__.py
-media/imagenes/*
+media/*
 
 
 # User-specific files

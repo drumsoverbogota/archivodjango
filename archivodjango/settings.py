@@ -13,11 +13,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from email.policy import default
 from decouple import config
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -147,11 +150,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LOGIN_REDIRECT_URL = '/'
 
-MEDIA_ROOT = config('MEDIA_ROOT', cast=str)
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 ENTRADA_BLOG = config('BLOG', cast=str, default="1")
 
