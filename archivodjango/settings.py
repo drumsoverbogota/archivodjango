@@ -154,8 +154,8 @@ STATIC_ROOT = '/app/staticfiles/'
 
 LOGIN_REDIRECT_URL = '/'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/django1/'
+MEDIA_ROOT = '/app/media'
 
 ENTRADA_BLOG = config('BLOG', cast=str, default="1")
 
