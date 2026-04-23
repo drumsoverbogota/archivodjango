@@ -1,0 +1,23 @@
+services:
+  web:
+    build: .
+    volumes:
+      - .:/app
+      - ./static/archivo:/app/static
+      - ./media:/app/media
+    environment:
+      DEBUG: "1"
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    networks:
+      - web
+
+volumes:
+  static_volume:
+  media_volume:
+
+networks:
+  web:
+    external: true
+    name: web

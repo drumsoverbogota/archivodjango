@@ -13,11 +13,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from email.policy import default
 from decouple import config
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -147,11 +150,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/app/staticfiles/'
 
 LOGIN_REDIRECT_URL = '/'
 
-MEDIA_ROOT = config('MEDIA_ROOT', cast=str)
-MEDIA_URL = '/media/'
+MEDIA_URL = '/media/django1/'
+MEDIA_ROOT = '/app/media'
 
 ENTRADA_BLOG = config('BLOG', cast=str, default="1")
 
@@ -167,21 +171,32 @@ LOGGING = {
             'format': '{levelname}: {message}',
             'style': '{',
         },
-    },    
+    },
+    
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
-        'file': {
-            'level': config('LOG_LEVEL', cast=str),
-            'class': 'logging.FileHandler',
-            'filename': config('LOG_FILE', cast=str),
-            'formatter': 'verbose',
-        },
     },
     'root': {
-        'handlers': ['console', 'file'],
-        'level': config('LOG_LEVEL', cast=str),
+        'handlers': ['console'],
+        'level': config('LOG_LEVEL', default='INFO', cast=str),
+    },
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
     },
 }

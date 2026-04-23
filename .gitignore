@@ -8,8 +8,9 @@ archivodjango/settings.ini
 archivodjango/mysql.cnf
 archivo/migrations/*
 !archivo/migrations/__init__.py
-media/imagenes/*
-
+media/*
+staticfiles/*
+static/*
 
 # User-specific files
 *.rsuser

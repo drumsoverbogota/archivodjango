@@ -1,0 +1,6 @@
+[client]
+database = archivo
+user = root
+password = root
+host = host.docker.internal
+default-character-set = utf8
